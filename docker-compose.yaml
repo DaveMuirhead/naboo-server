@@ -1,0 +1,18 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: naboo_db
+    restart: always
+    ports:
+      - '5434:5434'
+    environment:
+      POSTGRES_USER: naboo
+      POSTGRES_PASSWORD: naboo
+    volumes:
+      - data:/var/lib/postgresql/data:rw
+    command: -p 5434
+
+volumes:
+  data:
