@@ -48,6 +48,7 @@ defmodule Naboo.MixProject do
       {:commanded_eventstore_adapter, "~> 1.0"},
       {:commanded_ecto_projections, "~> 1.0"},
       {:eventstore, "~> 1.0"},
+      {:ex_machina, "~> 2.0", only: :test},
     ]
   end
 
