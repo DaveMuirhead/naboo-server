@@ -6,7 +6,7 @@ defmodule Naboo.Accounts do
   import Ecto.Query, warn: false
   alias Naboo.Repo
 
-  alias Naboo.Accounts.User
+  alias Naboo.Accounts.Projections.User
 
   @doc """
   Returns the list of users.

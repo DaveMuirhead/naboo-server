@@ -2,7 +2,7 @@ defmodule NabooWeb.UserController do
   use NabooWeb, :controller
 
   alias Naboo.Accounts
-  alias Naboo.Accounts.User
+  alias Naboo.Accounts.Projections.User
 
   action_fallback NabooWeb.FallbackController
 

@@ -1,4 +1,4 @@
-defmodule Naboo.Accounts.User do
+defmodule Naboo.Accounts.Projections.User do
   use Ecto.Schema
   import Ecto.Changeset
 
