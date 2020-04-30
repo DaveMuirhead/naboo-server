@@ -27,5 +27,6 @@ config :naboo, Naboo.Repo,
   database: "naboo_readstore_test",
   hostname: "localhost",
   port: 5434,
+  pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
