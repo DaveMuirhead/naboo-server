@@ -32,9 +32,11 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :commanded, event_store_adapter: Commanded.EventStore.Adapters.EventStore
+config :commanded,
+  event_store_adapter: Commanded.EventStore.Adapters.EventStore
 
-config :commanded_ecto_projections, repo: Naboo.Repo
+config :commanded_ecto_projections,
+  repo: Naboo.Repo
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
