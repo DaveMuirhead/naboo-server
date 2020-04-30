@@ -20,7 +20,7 @@ defmodule Naboo.MixProject do
   def application do
     [
       mod: {Naboo.Application, []},
-      extra_applications: [:eventstore]
+      extra_applications: [:eventstore, :os_mon]
     ]
   end
 
@@ -33,10 +33,9 @@ defmodule Naboo.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.12"},
-      {:phoenix_pubsub, "~> 1.1"},
-      {:phoenix_ecto, "~> 4.0"},
-      {:ecto_sql, "~> 3.1"},
+      {:phoenix, "~> 1.4.17"},
+      {:phoenix_ecto, "~> 4.1"},
+      {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_live_dashboard, "~> 0.2.0"},
       {:telemetry_metrics, "~> 0.4"},
@@ -44,11 +43,11 @@ defmodule Naboo.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
-      {:commanded, "~> 1.0.0"},
+      {:commanded, "~> 1.0.1"},
       {:commanded_eventstore_adapter, "~> 1.0"},
       {:commanded_ecto_projections, "~> 1.0"},
-      {:eventstore, "~> 1.0"},
-      {:ex_machina, "~> 2.0", only: :test},
+      {:eventstore, "~> 1.0.2"},
+      {:ex_machina, "~> 2.4", only: :test},
     ]
   end
 
@@ -60,11 +59,10 @@ defmodule Naboo.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup"],
-      "event_store.reset": ["event_store.drop", "event_store.create", "event_store.init"],
-      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
-      "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      "event_store.init": ["event_store.drop", "event_store.create", "event_store.init"],
+      "ecto.init": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      reset: ["event_store.init", "ecto.init"],
+      test: ["reset", "test"]
     ]
   end
 

@@ -7,6 +7,8 @@ defmodule NabooWeb.Router do
 
   scope "/api", NabooWeb do
     pipe_through :api
+
+    post "/users", UserController, :create
   end
 
   # Enables LiveDashboard only for development

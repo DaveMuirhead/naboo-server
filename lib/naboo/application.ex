@@ -16,9 +16,6 @@ defmodule Naboo.Application do
       # Start the Telemetry supervisor
       NabooWeb.Telemetry,
 
-      # Start the PubSub system
-      {Phoenix.PubSub, name: Naboo.PubSub},
-
       # Start the Endpoint (http/https)
       NabooWeb.Endpoint
 

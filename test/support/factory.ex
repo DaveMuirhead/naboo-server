@@ -3,8 +3,10 @@ defmodule Naboo.Factory do
 
   def user_factory do
     %{
-      email: "jake@jake.jake",
-      hashed_password: "jakejake",
+      email: "kylo@ren.com",
+      hashed_password: "kyloren",
+      first_name: "Kylo",
+      last_name: "Ren"
     }
   end
 
