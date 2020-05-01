@@ -5,5 +5,7 @@ defmodule Naboo.App do
         adapter: Commanded.EventStore.Adapters.EventStore,
         event_store: Naboo.EventStore
       ]
+
+  router(Naboo.Router)
 end
 

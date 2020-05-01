@@ -48,6 +48,9 @@ defmodule Naboo.MixProject do
       {:commanded_ecto_projections, "~> 1.0"},
       {:eventstore, "~> 1.0.2"},
       {:ex_machina, "~> 2.4", only: :test},
+      {:elixir_uuid, "~> 1.2"},
+      {:exconstructor, "~> 1.1"},
+      {:poison, "~> 3.1"}
     ]
   end
 

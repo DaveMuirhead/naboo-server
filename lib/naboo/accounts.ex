@@ -2,15 +2,15 @@ defmodule Naboo.Accounts do
 
   alias Naboo.Accounts.Commands.{RegisterUser}
   alias Naboo.Accounts.Projections.{User}
-  alias Naboo.App
   alias Naboo.Repo
+  alias Naboo.App
 
 
   def register_user(attrs \\ %{}) do
     uuid = UUID.uuid4()
 
     register_user = attrs
-    |> assign_uuid(uuid)
+    |> assign(:uuid, uuid)
     |> RegisterUser.new()
 
     with :ok <- App.dispatch(register_user, consistency: :strong) do
@@ -18,8 +18,8 @@ defmodule Naboo.Accounts do
     end
   end
 
-  defp assign_uuid(attrs, uuid) do
-    Map.put(attrs, :uuid, uuid)
+  defp assign(attrs, key, value) do
+    Map.put(attrs, key, value)
   end
 
   defp get(schema, uuid) do

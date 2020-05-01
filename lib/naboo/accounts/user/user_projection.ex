@@ -1,6 +1,5 @@
 defmodule Naboo.Accounts.Projections.User do
   use Ecto.Schema
-  import Ecto.Changeset
 
   @primary_key {:uuid, :binary_id, autogenerate: false}
   @timestamps_opts [type: :utc_datetime_usec]
@@ -14,10 +13,4 @@ defmodule Naboo.Accounts.Projections.User do
     timestamps()
   end
 
-  @doc false
-  def changeset(user, attrs) do
-    user
-    |> cast(attrs, [:email, :hashed_password, :first_name, :last_name])
-    |> validate_required([:email, :hashed_password])
-  end
 end

@@ -24,6 +24,7 @@ defmodule Naboo.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import Naboo.DataCase
+      import Naboo.Factory
     end
   end
 

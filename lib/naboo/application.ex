@@ -17,10 +17,10 @@ defmodule Naboo.Application do
       NabooWeb.Telemetry,
 
       # Start the Endpoint (http/https)
-      NabooWeb.Endpoint
+      NabooWeb.Endpoint,
 
-      # Start a worker by calling: Naboo.Worker.start_link(arg)
-      # {Naboo.Worker, arg}
+      # Accounts supervisor
+      Naboo.Accounts.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
