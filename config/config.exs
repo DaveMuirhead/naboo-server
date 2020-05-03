@@ -38,6 +38,11 @@ config :commanded,
 config :commanded_ecto_projections,
   repo: Naboo.Repo
 
+config :vex,
+  sources: [
+    Naboo.Support.Validators,
+    Vex.Validators
+  ]
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 

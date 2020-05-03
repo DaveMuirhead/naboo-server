@@ -28,13 +28,20 @@ defmodule Naboo.DataCase do
     end
   end
 
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Naboo.Repo)
+  # This is the normal Ecto Sandbox approach; see also test.exs
+  #  setup tags do
+  #    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Naboo.Repo)
+  #
+  #    unless tags[:async] do
+  #      Ecto.Adapters.SQL.Sandbox.mode(Naboo.Repo, {:shared, self()})
+  #    end
+  #
+  #    :ok
+  #  end
 
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Naboo.Repo, {:shared, self()})
-    end
-
+  # Ben Smith rolled his own database reset approach with the Storage module
+  setup do
+    Naboo.Storage.reset!()
     :ok
   end
 

@@ -20,7 +20,10 @@ defmodule Naboo.Application do
       NabooWeb.Endpoint,
 
       # Accounts supervisor
-      Naboo.Accounts.Supervisor
+      Naboo.Accounts.Supervisor,
+
+      # Uniqueness registry
+      Naboo.Support.Unique
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

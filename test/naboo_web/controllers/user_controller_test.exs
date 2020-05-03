@@ -6,7 +6,7 @@ defmodule NabooWeb.UserControllerTest do
   alias Naboo.Accounts
 
   def fixture(:user, attrs \\ []) do
-    build(:user, attrs) |> Accounts.create_user()
+    build(:user, attrs) |> Accounts.register_user()
   end
 
   setup %{conn: conn} do

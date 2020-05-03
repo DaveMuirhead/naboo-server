@@ -50,7 +50,8 @@ defmodule Naboo.MixProject do
       {:ex_machina, "~> 2.4", only: :test},
       {:elixir_uuid, "~> 1.2"},
       {:exconstructor, "~> 1.1"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:vex, "~> 0.8"},
     ]
   end
 
