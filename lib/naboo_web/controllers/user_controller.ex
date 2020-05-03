@@ -6,12 +6,16 @@ defmodule NabooWeb.UserController do
 
   action_fallback NabooWeb.FallbackController
 
-  def register(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Accounts.register_user(user_params) do
-      conn
-      |> put_status(:created)
-      #|> put_resp_header("location", Routes.user_path(conn, :show, user))
-      |> render("show.json", user: user)
+  def show(conn, %{"uuid" => uuid}) do
+    case Accounts.user_by_uuid(uuid) do
+      user_with_uuid ->
+        conn
+        |> put_status(:ok)
+        |> render("show.json", user: user_with_uuid)
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> render("empty.json", user: %{})
     end
   end
 

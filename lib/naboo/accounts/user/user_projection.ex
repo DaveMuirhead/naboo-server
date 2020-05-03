@@ -1,6 +1,6 @@
 defmodule Naboo.Accounts.Projections.User do
   use Ecto.Schema
-
+  @derive {Phoenix.Param, key: :uuid}
   @primary_key {:uuid, :binary_id, autogenerate: false}
   @timestamps_opts [type: :utc_datetime_usec]
 

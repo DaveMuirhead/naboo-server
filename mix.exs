@@ -54,6 +54,7 @@ defmodule Naboo.MixProject do
       {:vex, "~> 0.8"},
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
+      {:guardian, "~> 2.0"},
     ]
   end
 
