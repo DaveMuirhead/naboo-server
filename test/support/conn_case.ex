@@ -26,18 +26,29 @@ defmodule NabooWeb.ConnCase do
 
       alias NabooWeb.Router.Helpers, as: Routes
 
+      import Naboo.Factory
+
       # The default endpoint for testing
       @endpoint NabooWeb.Endpoint
     end
   end
 
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Naboo.Repo)
+#  This is the normal Ecto Sandbox approach; see also test.exs
+#  setup tags do
+#    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Naboo.Repo)
+#
+#    unless tags[:async] do
+#      Ecto.Adapters.SQL.Sandbox.mode(Naboo.Repo, {:shared, self()})
+#    end
+#
+#    {:ok, conn: Phoenix.ConnTest.build_conn()}
+#  end
 
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Naboo.Repo, {:shared, self()})
-    end
+  # Ben Smith rolled his own database reset approach with the Storage module
+  setup tags do
+    Naboo.Storage.reset!()
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
+
 end

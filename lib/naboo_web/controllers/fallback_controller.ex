@@ -19,4 +19,12 @@ defmodule NabooWeb.FallbackController do
     |> put_view(NabooWeb.ErrorView)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :validation_failure, errors}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(NabooWeb.ValidationView)
+    |> render("error.json", errors: errors)
+  end
+
 end
