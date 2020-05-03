@@ -1,16 +1,28 @@
 defmodule NabooWeb.Router do
   use NabooWeb, :router
 
-  pipeline :api do
+  pipeline :maybe_authenticated do
     plug :accepts, ["json"]
+    plug NabooWeb.AuthPipeline
+  end
+
+  pipeline :authenticated do
+    plug Guardian.Plug.EnsureAuthenticated
   end
 
   scope "/api", NabooWeb do
-    pipe_through :api
+    pipe_through :maybe_authenticated
 
     post "/register", RegistrationController, :register
+    post "/sign_in", SessionController, :sign_in
+
+  end
+
+  scope "/api", NabooWeb do
+    pipe_through [:maybe_authenticated, :authenticated]
 
     get "/users/:uuid", UserController, :show
+    get "/users/current", UserController, :current
   end
 
   # Enables LiveDashboard only for development

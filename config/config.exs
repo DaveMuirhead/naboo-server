@@ -48,7 +48,6 @@ config :phoenix, :json_library, Jason
 
 config :naboo, Naboo.Auth.Guardian,
   allowed_algos: ["HS512"],
-  verify_module: Guardian.JWT,
   issuer: "Naboo",
   ttl: {2, :days},
   allowed_drift: 2000,

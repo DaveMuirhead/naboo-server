@@ -19,4 +19,14 @@ defmodule NabooWeb.UserController do
     end
   end
 
+  def current(conn, _params) do
+    with user = Guardian.Plug.current_resource(conn),
+         jwt = Guardian.Plug.current_token(conn)
+      do
+      conn
+      |> put_status(:ok)
+      |> render("show.json", user: user, jwt: jwt)
+    end
+  end
+
 end

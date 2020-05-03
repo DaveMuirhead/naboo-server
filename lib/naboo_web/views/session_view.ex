@@ -1,15 +1,22 @@
 defmodule NabooWeb.SessionView do
   use NabooWeb, :view
 
-  def render("signed_in.json", conn) do
-    IO.inspect(conn)
+  def render("signed_in.json", %{user: user, token: token}) do
     %{
       status: :ok,
       data: %{
-        token: conn.user.jwt,
-        email: conn.user.email
+        token: token,
+        email: user.email
       },
-      message: "You are successfully logged in! Add this token to Authorization header to make authorized requests."
+      message: "You are successfully logged in. Add this token to Authorization header with a 'Bearer' realm to make authorized requests."
+    }
+  end
+
+  def render("error.json", %{errors: errors}) do
+    %{
+      status: :unauthorized,
+      errors: errors,
+      message: "Invalid email or password"
     }
   end
 
