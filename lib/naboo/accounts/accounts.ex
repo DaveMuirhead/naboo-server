@@ -11,8 +11,6 @@ defmodule Naboo.Accounts do
   # ################################################################################
 
   def register_user(attrs \\ %{}) do
-    IO.puts("register_user called with attrs")
-    IO.inspect(attrs)
     uuid = UUID.uuid4()
 
     register_user = attrs
