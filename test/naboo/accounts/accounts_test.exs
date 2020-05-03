@@ -2,6 +2,7 @@ defmodule Naboo.AccountsTest do
   use Naboo.DataCase
 
   alias Naboo.Accounts
+  alias Naboo.Accounts.Auth
   alias Naboo.Accounts.Projections.User
 
   describe "register user" do
@@ -11,7 +12,6 @@ defmodule Naboo.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.register_user(build(:user))
 
       assert user.email == "kylo@ren.com"
-      assert user.hashed_password == "kyloren"
     end
 
     @tag :integration
@@ -48,6 +48,13 @@ defmodule Naboo.AccountsTest do
       assert {:ok, %User{} = user} = Accounts.register_user(build(:user, email: "DARTH@VADER.COM"))
 
       assert user.email == "darth@vader.com"
+    end
+
+    @tag :integration
+    test "should hash password" do
+      assert {:ok, %User{} = user} = Accounts.register_user(build(:user))
+
+      assert Auth.validate_password("kyloren", user.hashed_password)
     end
 
   end

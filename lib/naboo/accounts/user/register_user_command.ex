@@ -9,6 +9,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   use ExConstructor
   use Vex.Struct
 
+  alias Naboo.Accounts.Auth
   alias Naboo.Accounts.Commands.{RegisterUser}
   alias Naboo.Accounts.Validators.{UniqueEmail}
 
@@ -28,6 +29,16 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   """
   def downcase_email(%RegisterUser{email: email} = register_user) do
     %RegisterUser{register_user | email: String.downcase(email)}
+  end
+
+  @doc """
+  Hash the password, clear the original password
+  """
+  def hash_password(%RegisterUser{password: password} = register_user) do
+    %RegisterUser{register_user |
+      password: nil,
+      hashed_password: Auth.hash_password(password),
+    }
   end
 
   defimpl Naboo.Support.Middleware.Uniqueness.UniqueFields, for: Naboo.Accounts.Commands.RegisterUser do

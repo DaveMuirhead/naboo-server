@@ -30,3 +30,4 @@ config :naboo, Naboo.Repo,
 #  pool: Ecto.Adapters.SQL.Sandbox,  # see data_case.exs
   pool_size: 10
 
+config :bcrypt_elixir, :log_rounds, 4

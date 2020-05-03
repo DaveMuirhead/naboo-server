@@ -17,6 +17,7 @@ defmodule Naboo.Accounts do
     |> assign(:uuid, uuid)
     |> RegisterUser.new()
     |> RegisterUser.downcase_email()
+    |> RegisterUser.hash_password()
 
     with :ok <- App.dispatch(register_user, consistency: :strong) do
       get(User, uuid)

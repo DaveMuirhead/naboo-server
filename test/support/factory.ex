@@ -6,7 +6,7 @@ defmodule Naboo.Factory do
   def user_factory do
     %{
       email: "kylo@ren.com",
-      hashed_password: "kyloren",
+      password: "kyloren",
       first_name: "Kylo",
       last_name: "Ren"
     }
