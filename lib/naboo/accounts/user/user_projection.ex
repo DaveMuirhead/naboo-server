@@ -7,7 +7,9 @@ defmodule Naboo.Accounts.Projections.User do
   schema "accounts_users" do
     field :email, :string, unique: true
     field :first_name, :string
+    field :google_uid, :string
     field :hashed_password, :string
+    field :image_url, :string
     field :last_name, :string
 
     timestamps()

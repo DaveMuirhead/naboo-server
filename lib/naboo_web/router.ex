@@ -1,6 +1,10 @@
 defmodule NabooWeb.Router do
   use NabooWeb, :router
 
+  pipeline :api do
+    plug :accepts, ["json"]
+  end
+
   pipeline :maybe_authenticated do
     plug :accepts, ["json"]
     plug NabooWeb.AuthPipeline
@@ -10,12 +14,20 @@ defmodule NabooWeb.Router do
     plug Guardian.Plug.EnsureAuthenticated
   end
 
+  scope "/api/oauth", NabooWeb do
+    pipe_through :api
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    post "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
+  end
+
   scope "/api", NabooWeb do
     pipe_through :maybe_authenticated
 
-    post "/register", RegistrationController, :register
-    post "/sign_in", SessionController, :sign_in
-
+    post "/register", RegistrationController, :register #this one stays
+    post "/sign_in", SessionController, :sign_in # this one goes away
   end
 
   scope "/api", NabooWeb do

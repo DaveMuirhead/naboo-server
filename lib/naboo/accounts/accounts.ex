@@ -2,7 +2,7 @@ defmodule Naboo.Accounts do
 
   alias Naboo.Accounts.Commands.{RegisterUser}
   alias Naboo.Accounts.Projections.{User}
-  alias Naboo.Accounts.Queries.{UserByEmail}
+  alias Naboo.Accounts.Queries.{UserByEmail, UserByGoogleUid}
   alias Naboo.Repo
   alias Naboo.App
 
@@ -32,6 +32,12 @@ defmodule Naboo.Accounts do
     email
     |> String.downcase()
     |> UserByEmail.new()
+    |> Repo.one()
+  end
+
+  def user_by_google_uid(uid) when is_binary(uid) do
+    uid
+    |> UserByGoogleUid.new()
     |> Repo.one()
   end
 

@@ -1,6 +1,6 @@
-defmodule Naboo.Accounts.Auth do
+defmodule Naboo.Auth.Authenticator do
   @moduledoc """
-  Authentication using the bcrypt password hashing function.
+  Basic authentication using the bcrypt password hashing function.
   """
 
   alias Comeonin.Bcrypt

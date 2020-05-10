@@ -1,15 +1,19 @@
 defmodule Naboo.Accounts.Commands.RegisterUser do
   defstruct [
-    :uuid,
     :email,
-    :password,
+    :first_name,
+    :google_uid,
     :hashed_password,
+    :image_url,
+    :last_name,
+    :password,
+    :uuid,
   ]
 
   use ExConstructor
   use Vex.Struct
 
-  alias Naboo.Accounts.Auth
+  alias Naboo.Auth.Authenticator
   alias Naboo.Accounts.Commands.{RegisterUser}
   alias Naboo.Accounts.Validators.{UniqueEmail}
 
@@ -22,7 +26,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
     by: &UniqueEmail.validate/2
   )
 
-  validates(:hashed_password, presence: true, string: true)
+  validates(:hashed_password, string: true)
 
   @doc """
   Convert email to lowercase characters
@@ -37,7 +41,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   def hash_password(%RegisterUser{password: password} = register_user) do
     %RegisterUser{register_user |
       password: nil,
-      hashed_password: Auth.hash_password(password),
+      hashed_password: Authenticator.hash_password(password),
     }
   end
 

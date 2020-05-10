@@ -46,14 +46,8 @@ config :vex,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :naboo, Naboo.Auth.Guardian,
-  allowed_algos: ["HS512"],
-  issuer: "Naboo",
-  ttl: {2, :days},
-  allowed_drift: 2000,
-  verify_issuer: true,
-  secret_key: "bbOSDNSPINjOJWQNgt3fA9ny3RxLdyd12aaPM202vyjNZ7Rl2zlBtHmGqyHSHReM",
-  serializer: Naboo.Auth.Guardian
+# Import configuration for Ueberauth and Guardian
+import_config "ueberauth.exs"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
