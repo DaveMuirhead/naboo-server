@@ -20,7 +20,7 @@ defmodule Naboo.MixProject do
   def application do
     [
       mod: {Naboo.Application, []},
-      extra_applications: [:eventstore, :os_mon, :ueberauth, :ueberauth_google]
+      extra_applications: [:eventstore, :os_mon, :ueberauth_auth0]
     ]
   end
 
@@ -55,9 +55,7 @@ defmodule Naboo.MixProject do
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:guardian, "~> 2.0"},
-      {:ueberauth, "~> 0.6.3"},
-      {:ueberauth_identity, "~> 0.3.0"},
-      {:ueberauth_google, "~> 0.9.0"},
+      {:ueberauth_auth0, "~> 0.4"}
     ]
   end
 

@@ -11,17 +11,10 @@ defmodule NabooWeb.AuthController do
 
   action_fallback NabooWeb.FallbackController
 
-  def request(conn, %{"provider" => "identity"}) do
-    conn
-    |> put_status(:method_not_allowed)
-    |> render("error.json", status: :method_not_allowed, message: "identity provider does not support GET, use /api/sign_in instead")
-    |> halt()
-  end
-
   # we should never get here for a configured OAuth2 strategy
   def request(conn, %{"provider" => provider}) do
     IO.puts("AuthController.request called for provider '#{provider}'")
-    render(conn, "error.json", status: :bad_request, message: "#{provider} is not a configured strategy in config/ueberauth.exs")
+    render(conn, "error.json", status: :bad_request, message: "#{provider} is not configured in config/ueberauth.exs or else URI path doesn't match ueberauth configuration")
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
@@ -40,21 +33,18 @@ defmodule NabooWeb.AuthController do
     end
   end
 
-  defp find_or_create(%Auth{provider: :identity} = auth) do
-    IO.puts("AuthController.find_or_create for :identity called")
-    Authenticator.authenticate(auth.uid, auth.credentials.other.password)
-  end
-
-  defp find_or_create(%Auth{provider: :google} = auth) do
-    IO.puts("AuthController.find_or_create for :google called")
-    uid = auth.uid
-    case Accounts.user_by_google_uid(uid) do
-      %User{} = user ->
-        {:ok, user}
-      nil ->
-        IO.puts("Accounts.user_by_google_uid ")
-        social_register(:google, auth)
-    end
+  defp find_or_create(%Auth{provider: :auth0} = auth) do
+    IO.puts("AuthController.find_or_create for :auth0 called")
+    IO.inspect(auth)
+    {:error, "not yet implemented"}
+#    uid = auth.uid
+#    case Accounts.user_by_google_uid(uid) do
+#      %User{} = user ->
+#        {:ok, user}
+#      nil ->
+#        IO.puts("Accounts.user_by_google_uid ")
+#        social_register(:google, auth)
+#    end
   end
 
   defp find_or_create(%Auth{provider: other} = auth) do

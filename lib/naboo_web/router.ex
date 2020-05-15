@@ -14,23 +14,21 @@ defmodule NabooWeb.Router do
     plug Guardian.Plug.EnsureAuthenticated
   end
 
-  scope "/api/oauth", NabooWeb do
+  scope "/v1/auth", NabooWeb do
     pipe_through :api
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
-    post "/:provider/callback", AuthController, :callback
-    delete "/logout", AuthController, :delete
   end
 
-  scope "/api", NabooWeb do
+  scope "/v1/api", NabooWeb do
     pipe_through :maybe_authenticated
 
     post "/register", RegistrationController, :register #this one stays
     post "/sign_in", SessionController, :sign_in # this one goes away
   end
 
-  scope "/api", NabooWeb do
+  scope "/v1/api", NabooWeb do
     pipe_through [:maybe_authenticated, :authenticated]
 
     get "/users/:uuid", UserController, :show
