@@ -55,7 +55,8 @@ defmodule Naboo.MixProject do
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:guardian, "~> 2.0"},
-      {:ueberauth_auth0, "~> 0.4"}
+      {:ueberauth_auth0, "~> 0.4"},
+      {:cors_plug, "~> 2.0"}
     ]
   end
 
