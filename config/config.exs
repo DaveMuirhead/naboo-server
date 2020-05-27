@@ -47,7 +47,7 @@ config :vex,
 config :phoenix, :json_library, Jason
 
 # Import configuration for Ueberauth and Guardian with Auth0 as Identify Management service
-import_config "ueberauth-auth0.exs"
+import_config "ueberauth-local.exs"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

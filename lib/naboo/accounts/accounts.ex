@@ -21,6 +21,10 @@ defmodule Naboo.Accounts do
 
     with :ok <- App.dispatch(register_user, consistency: :strong) do
       get(User, uuid)
+    else
+      reply ->
+        IO.puts("App.dispatch of RegisterUser failed with reply #{reply}")
+        reply
     end
   end
 

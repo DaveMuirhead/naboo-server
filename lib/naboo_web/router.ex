@@ -19,6 +19,7 @@ defmodule NabooWeb.Router do
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
+    post "/identity/callback", AuthController, :callback
   end
 
   scope "/v1/api", NabooWeb do

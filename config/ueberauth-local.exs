@@ -1,7 +1,7 @@
 use Mix.Config
 
 config :ueberauth, Ueberauth,
-  base_path: "/api/oauth",
+  base_path: "/v1/auth",
   providers: [
    #   facebook: {Ueberauth.Strategy.Facebook, []},
    #   github: {Ueberauth.Strategy.Github, [default_scope: "user:email"]},

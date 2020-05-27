@@ -1,11 +1,11 @@
 defmodule Naboo.Accounts.Commands.RegisterUser do
   defstruct [
     :email,
-    :first_name,
+    :full_name,
     :google_uid,
     :hashed_password,
     :image_url,
-    :last_name,
+    :nickname,
     :password,
     :uuid,
   ]

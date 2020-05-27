@@ -6,6 +6,13 @@ defmodule NabooWeb.FallbackController do
   """
   use NabooWeb, :controller
 
+  def call(conn, {:error, %Ueberauth.Auth{} = auth}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(NabooWeb.AuthView)
+    |> render("error.json", auth: auth)
+  end
+
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)

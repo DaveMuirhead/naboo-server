@@ -17,24 +17,38 @@ defmodule NabooWeb.AuthController do
     render(conn, "error.json", status: :bad_request, message: "#{provider} is not configured in config/ueberauth.exs or else URI path doesn't match ueberauth configuration")
   end
 
-  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-#    IO.puts("AuthController.callback invoked with conn")
-#    IO.inspect(conn)
-    case find_or_create(auth) do
+  def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
+    case find_or_create(auth, params) do
       {:ok, user} ->
+      IO.puts("find_or_create returned user")
+      IO.inspect(user)
         conn = conn
         |> Guardian.Plug.sign_in(Naboo.Auth.Guardian, user)
         token = Guardian.Plug.current_token(conn)
         render(conn, "signed_in.json", user: user, token: token)
       {:error, reason} ->
+        IO.puts("find_or_create returned error with reason #{reason}")
         conn
         |> put_status(:unauthorized)
         |> render("error.json", status: :unauthorized, message: reason)
     end
   end
 
-  defp find_or_create(%Auth{provider: :auth0} = auth) do
-    IO.puts("AuthController.find_or_create for :auth0 called")
+  # returns {:ok, user} or {:error, reason}
+  defp find_or_create(%Auth{provider: :identity} = auth, params) do
+    email = params["email"]
+    full_name = params["full_name"]
+    password = params["password"]
+    case Accounts.user_by_email(email) do
+      %User{} = user ->
+        Authenticator.check_password(user, password)
+      nil ->
+        Accounts.register_user(%{email: email, full_name: full_name, password: password })
+    end
+  end
+
+  defp find_or_create(%Auth{provider: :auth0} = auth, _params) do
+    IO.puts("AuthController.find_or_create for Auth0 called")
     IO.inspect(auth)
     {:error, "not yet implemented"}
 #    uid = auth.uid
@@ -49,7 +63,7 @@ defmodule NabooWeb.AuthController do
 
   defp find_or_create(%Auth{provider: other} = auth) do
     IO.puts("AuthController.find_or_create for #{other} called")
-    {:error, "OAuth2 provider #{other} is not supported; see config/ueberauth.exs"}
+    {:error, "Ueberauth provider #{other} is not supported; see config/ueberauth.exs"}
   end
 
   defp social_register(:google, auth) do

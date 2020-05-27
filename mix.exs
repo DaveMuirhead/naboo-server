@@ -56,6 +56,8 @@ defmodule Naboo.MixProject do
       {:comeonin, "~> 4.0"},
       {:guardian, "~> 2.0"},
       {:ueberauth_auth0, "~> 0.4"},
+      {:ueberauth_google, "~> 0.9"},
+      {:ueberauth_identity, "~> 0.3"},
       {:cors_plug, "~> 2.0"}
     ]
   end

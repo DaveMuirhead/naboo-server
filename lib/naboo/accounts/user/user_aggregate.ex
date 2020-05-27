@@ -1,11 +1,11 @@
 defmodule Naboo.Accounts.Aggregates.User do
   defstruct [
     :email,
-    :first_name,
+    :full_name,
     :google_uid,
     :hashed_password,
     :image_url,
-    :last_name,
+    :nickname,
     :password,
     :uuid,
   ]
@@ -21,11 +21,11 @@ defmodule Naboo.Accounts.Aggregates.User do
   def execute(%User{uuid: nil}, %RegisterUser{} = register) do
     %UserRegistered{
       email: register.email,
-      first_name: register.first_name,
+      full_name: register.full_name,
       google_uid: register.google_uid,
       hashed_password: register.hashed_password,
       image_url: register.image_url,
-      last_name: register.last_name,
+      nickname: register.nickname,
       uuid: register.uuid,
     }
   end
@@ -37,11 +37,11 @@ defmodule Naboo.Accounts.Aggregates.User do
   def apply(%User{} = user, %UserRegistered{} = registered) do
     %User{user |
       email: registered.email,
-      first_name: registered.first_name,
+      full_name: registered.full_name,
       google_uid: registered.google_uid,
       hashed_password: registered.hashed_password,
       image_url: registered.image_url,
-      last_name: registered.last_name,
+      nickname: registered.nickname,
       uuid: registered.uuid,
     }
     end

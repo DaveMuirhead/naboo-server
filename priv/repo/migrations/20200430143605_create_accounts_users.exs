@@ -5,11 +5,11 @@ defmodule Naboo.Repo.Migrations.CreateAccountsUsers do
     create table(:accounts_users) do
       add :uuid, :uuid, primary_key: true
       add :email, :string
-      add :first_name, :string
+      add :full_name, :string
       add :google_uid, :string
       add :hashed_password, :string
       add :image_url, :string
-      add :last_name, :string
+      add :nickname, :string
 
       timestamps()
     end
