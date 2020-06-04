@@ -18,33 +18,39 @@ defmodule NabooWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
-    case find_or_create(auth, params) do
-      {:ok, user} ->
-      IO.puts("find_or_create returned user")
-      IO.inspect(user)
-        conn = conn
+    IO.inspect(conn)
+    with {:ok, user} <- find_or_create(auth, params) do
+      conn = conn
         |> Guardian.Plug.sign_in(Naboo.Auth.Guardian, user)
-        token = Guardian.Plug.current_token(conn)
-        render(conn, "signed_in.json", user: user, token: token)
-      {:error, reason} ->
-        IO.puts("find_or_create returned error with reason #{reason}")
-        conn
-        |> put_status(:unauthorized)
-        |> render("error.json", status: :unauthorized, message: reason)
+      token = Guardian.Plug.current_token(conn)
+      render(conn, "signed_in.json", user: user, token: token)
     end
   end
 
-  # returns {:ok, user} or {:error, reason}
-  defp find_or_create(%Auth{provider: :identity} = auth, params) do
+  defp find_or_create(%Auth{provider: :identity} = auth, %{"action" => "signup"} = params) do
+    IO.puts("AuthController.find_or_create - identity signup")
+    account_type = params["account_type"]
     email = params["email"]
     full_name = params["full_name"]
+    password = params["password"]
+    Accounts.register_user(params)
+  end
+
+  defp find_or_create(%Auth{provider: :identity} = auth, %{"action" => "login"} = params) do
+    IO.puts("AuthController.find_or_create - identity login")
+    email = params["email"]
     password = params["password"]
     case Accounts.user_by_email(email) do
       %User{} = user ->
         Authenticator.check_password(user, password)
       nil ->
-        Accounts.register_user(%{email: email, full_name: full_name, password: password })
+        {:error, :unauthorized}
     end
+  end
+
+  defp find_or_create(%Auth{provider: :identity} = auth, %{"action" => _} = params) do
+    IO.puts("AuthController.find_or_create - identity unknown action")
+    {:error, :unprocessable_entity}
   end
 
   defp find_or_create(%Auth{provider: :auth0} = auth, _params) do

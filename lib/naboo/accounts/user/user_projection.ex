@@ -5,6 +5,7 @@ defmodule Naboo.Accounts.Projections.User do
   @timestamps_opts [type: :utc_datetime_usec]
 
   schema "accounts_users" do
+    field :account_type, :string
     field :email, :string, unique: true
     field :full_name, :string
     field :google_uid, :string

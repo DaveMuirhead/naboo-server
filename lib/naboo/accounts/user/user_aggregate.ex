@@ -1,5 +1,6 @@
 defmodule Naboo.Accounts.Aggregates.User do
   defstruct [
+    :account_type, #:provider or :seeker
     :email,
     :full_name,
     :google_uid,
@@ -18,15 +19,16 @@ defmodule Naboo.Accounts.Aggregates.User do
   # Command Execution
   # ################################################################################
 
-  def execute(%User{uuid: nil}, %RegisterUser{} = register) do
+  def execute(%User{uuid: nil}, %RegisterUser{} = command) do
     %UserRegistered{
-      email: register.email,
-      full_name: register.full_name,
-      google_uid: register.google_uid,
-      hashed_password: register.hashed_password,
-      image_url: register.image_url,
-      nickname: register.nickname,
-      uuid: register.uuid,
+      account_type: command.account_type,
+      email: command.email,
+      full_name: command.full_name,
+      google_uid: command.google_uid,
+      hashed_password: command.hashed_password,
+      image_url: command.image_url,
+      nickname: command.nickname,
+      uuid: command.uuid,
     }
   end
 
@@ -34,15 +36,16 @@ defmodule Naboo.Accounts.Aggregates.User do
   # Event Application
   # ################################################################################
 
-  def apply(%User{} = user, %UserRegistered{} = registered) do
+  def apply(%User{} = user, %UserRegistered{} = event) do
     %User{user |
-      email: registered.email,
-      full_name: registered.full_name,
-      google_uid: registered.google_uid,
-      hashed_password: registered.hashed_password,
-      image_url: registered.image_url,
-      nickname: registered.nickname,
-      uuid: registered.uuid,
+      account_type: event.account_type,
+      email: event.email,
+      full_name: event.full_name,
+      google_uid: event.google_uid,
+      hashed_password: event.hashed_password,
+      image_url: event.image_url,
+      nickname: event.nickname,
+      uuid: event.uuid,
     }
     end
 

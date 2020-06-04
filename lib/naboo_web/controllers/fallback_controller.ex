@@ -6,18 +6,18 @@ defmodule NabooWeb.FallbackController do
   """
   use NabooWeb, :controller
 
-  def call(conn, {:error, %Ueberauth.Auth{} = auth}) do
+  def call(conn, {:error, :aggregate_execution_failed}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(NabooWeb.AuthView)
-    |> render("error.json", auth: auth)
+    |> put_view(NabooWeb.ValidationView)
+    |> render("error.json", errors: %{})
   end
 
-  def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
+  def call(conn, {:error, :validation_failure, %{} = errors}) do
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(NabooWeb.ChangesetView)
-    |> render("error.json", changeset: changeset)
+    |> put_view(NabooWeb.ValidationView)
+    |> render("error.json", errors: errors)
   end
 
   def call(conn, {:error, :not_found}) do
@@ -27,11 +27,18 @@ defmodule NabooWeb.FallbackController do
     |> render(:"404")
   end
 
-  def call(conn, {:error, :validation_failure, errors}) do
+  def call(conn, {:error, :unauthorized}) do
     conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(NabooWeb.ValidationView)
-    |> render("error.json", errors: errors)
+    |> put_status(:unauthorized)
+    |> put_view(NabooWeb.ErrorView)
+    |> render(:"401")
+  end
+
+  def call(conn, {:error, :internal_server_error}) do
+    conn
+    |> put_status(:internal_server_error)
+    |> put_view(NabooWeb.ErrorView)
+    |> render(:"500")
   end
 
 end

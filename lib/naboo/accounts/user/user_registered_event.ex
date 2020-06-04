@@ -1,6 +1,7 @@
 defmodule Naboo.Accounts.Events.UserRegistered do
   @derive Jason.Encoder
   defstruct [
+    :account_type,
     :email,
     :full_name,
     :google_uid,

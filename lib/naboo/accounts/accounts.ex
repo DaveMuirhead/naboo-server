@@ -23,7 +23,8 @@ defmodule Naboo.Accounts do
       get(User, uuid)
     else
       reply ->
-        IO.puts("App.dispatch of RegisterUser failed with reply #{reply}")
+        IO.puts("App.dispatch of RegisterUser failed with reply")
+        IO.inspect(reply)
         reply
     end
   end

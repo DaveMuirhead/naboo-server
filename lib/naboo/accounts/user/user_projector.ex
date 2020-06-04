@@ -7,15 +7,16 @@ defmodule Naboo.Accounts.Projectors.User do
   alias Naboo.Accounts.Events.{UserRegistered}
   alias Naboo.Accounts.Projections.{User}
 
-  project(%UserRegistered{} = registered, fn multi ->
+  project(%UserRegistered{} = event, fn multi ->
     Ecto.Multi.insert(multi, :user, %User{
-      uuid: registered.uuid,
-      email: registered.email,
-      full_name: registered.full_name,
-      google_uid: registered.google_uid,
-      hashed_password: registered.hashed_password,
-      image_url: registered.image_url,
-      nickname: registered.nickname
+      uuid: event.uuid,
+      account_type: event.account_type,
+      email: event.email,
+      full_name: event.full_name,
+      google_uid: event.google_uid,
+      hashed_password: event.hashed_password,
+      image_url: event.image_url,
+      nickname: event.nickname
     })
   end)
 

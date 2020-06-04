@@ -1,5 +1,6 @@
 defmodule Naboo.Accounts.Commands.RegisterUser do
   defstruct [
+    :account_type, #:provider or :seeker
     :email,
     :full_name,
     :google_uid,
@@ -16,6 +17,11 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   alias Naboo.Auth.Authenticator
   alias Naboo.Accounts.Commands.{RegisterUser}
   alias Naboo.Accounts.Validators.{UniqueEmail}
+
+  validates(:account_type,
+    presence: true,
+    inclusion: [in: ["provider", "seeker"]]
+  )
 
   validates(:uuid, uuid: true)
 

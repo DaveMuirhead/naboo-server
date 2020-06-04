@@ -4,6 +4,7 @@ defmodule Naboo.Repo.Migrations.CreateAccountsUsers do
   def change do
     create table(:accounts_users) do
       add :uuid, :uuid, primary_key: true
+      add :account_type, :string
       add :email, :string
       add :full_name, :string
       add :google_uid, :string
