@@ -15,19 +15,21 @@ defmodule NabooWeb.Router do
   end
 
   scope "/v1/auth", NabooWeb do
-    pipe_through :api
+    pipe_through :maybe_authenticated
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
     post "/identity/callback", AuthController, :callback
+
+    get "/user/email/:email", UserController, :validate_email_exists
   end
 
-  scope "/v1/api", NabooWeb do
-    pipe_through :maybe_authenticated
-
-    post "/register", RegistrationController, :register #this one stays
-    post "/sign_in", SessionController, :sign_in # this one goes away
-  end
+#  scope "/v1/api", NabooWeb do
+#    pipe_through :maybe_authenticated
+#
+#    post "/register", RegistrationController, :register #this one stays
+#    post "/sign_in", SessionController, :sign_in # this one goes away
+#  end
 
   scope "/v1/api", NabooWeb do
     pipe_through [:maybe_authenticated, :authenticated]

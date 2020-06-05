@@ -29,4 +29,25 @@ defmodule NabooWeb.UserController do
     end
   end
 
+  @doc """
+  Find user by email, report :found or :not_found with empty body.
+  A JSON object of the following structure is expected:
+  {
+    "email": ""
+  }
+  """
+  def validate_email_exists(conn, params) do
+    email = Map.get(params, "email")
+    case Accounts.user_by_email(email) do
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> render("empty.json", user: %{})
+      _user ->
+        conn
+        |> put_status(:ok)
+        |> render("empty.json", user: %{})
+    end
+  end
+
 end
