@@ -16,7 +16,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
 
   alias Naboo.Auth.Authenticator
   alias Naboo.Accounts.Commands.{RegisterUser}
-  alias Naboo.Accounts.Validators.{UniqueEmail}
+  alias Naboo.Accounts.Validators.{StrongPassword, UniqueEmail}
 
   validates(:account_type,
     presence: true,
@@ -33,8 +33,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   )
 
   validates(:password,
-    presence: true,
-    by: &RegisterUser.strong_password/1
+    by: &StrongPassword.validate/2
   )
 
   validates(:hashed_password, string: true)
@@ -51,7 +50,6 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   """
   def hash_password(%RegisterUser{password: password} = register_user) do
     %RegisterUser{register_user |
-      password: nil,
       hashed_password: Authenticator.hash_password(password),
     }
   end
@@ -60,14 +58,6 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
     def unique(_command), do: [
       {:email, "has already been taken"},
     ]
-  end
-
-  defp strong_password(password) do
-    String.match?(password, ~r/^[[:lower:]]+$/) &&  # checks for a-z
-    String.match?(password, ~r/^[[:upper:]]+$/) &&  # checks for A-Z
-    String.match?(password, ~r/^[[:digit:]]+$/) &&  # checks for 0-9
-    String.match?(password, ~r/^[[:punct:]]+$/) &&  # checks for special char
-    String.length(password) >= 8
   end
 
 end

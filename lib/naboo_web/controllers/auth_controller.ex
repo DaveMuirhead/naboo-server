@@ -18,7 +18,6 @@ defmodule NabooWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, params) do
-    IO.inspect(conn)
     with {:ok, user} <- find_or_create(auth, params) do
       conn = conn
         |> Guardian.Plug.sign_in(Naboo.Auth.Guardian, user)
