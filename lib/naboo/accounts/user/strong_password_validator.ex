@@ -1,17 +1,25 @@
 defmodule Naboo.Accounts.Validators.StrongPassword do
   use Vex.Validator
 
+#  "Please choose a stronger password with at least 8 characters, including a minimum of one each of upper and lower case letters, numbers and special characters."
+
   def validate(value, context) do
-    with :ok <- is_min_length(value),
-         :ok <- has_lowercase_letter(value),
-         :ok <- has_uppercase_letter(value),
-         :ok <- has_number(value),
-         :ok <- has_punctuation(value)
-      do
-      :ok
-    else
-      err -> err
+    case strong_password(value) do
+      true -> :ok
+      false -> {:error, "Please choose a stronger password with at least 8 characters, including a minimum of one each of upper and lower case letters, numbers and special characters."}
     end
+  end
+
+  def strong_password(nil) do
+    false
+  end
+
+  def strong_password(password) do
+    is_min_length(password) and
+    has_lowercase_letter(password) and
+    has_uppercase_letter(password) and
+    has_number(password) and
+    has_punctuation(password)
   end
 
   def is_min_length(nil) do
@@ -19,38 +27,23 @@ defmodule Naboo.Accounts.Validators.StrongPassword do
   end
 
   def is_min_length(password) do
-    case String.length(password) >= 8 do
-      true -> :ok
-      false -> {:error, "Must be at least 8 characters long."}
-    end
+    String.length(password) >= 8
   end
 
   def has_lowercase_letter(password) do
-    case String.match?(password, ~r/[[:lower:]]+/) do
-      true -> :ok
-      false -> {:error, "Must include lower case letter."}
-    end
+    String.match?(password, ~r/[[:lower:]]+/)
   end
 
   def has_uppercase_letter(password) do
-    case String.match?(password, ~r/[[:upper:]]+/) do
-      true -> :ok
-      false -> {:error, "Must include upper case letter."}
-    end
+    String.match?(password, ~r/[[:upper:]]+/)
   end
 
   def has_number(password) do
-    case String.match?(password, ~r/[[:digit:]]+/) do
-      true -> :ok
-      false -> {:error, "Must include number."}
-    end
+    String.match?(password, ~r/[[:digit:]]+/)
   end
 
   def has_punctuation(password) do
-    case String.match?(password, ~r/[[:punct:]]+/) do
-      true -> :ok
-      false -> {:error, "Must include special character."}
-    end
+    String.match?(password, ~r/[[:punct:]]+/)
   end
 
 end

@@ -7,7 +7,7 @@ defmodule Naboo.Accounts.Validators.UniqueEmail do
   def validate(value, context) do
     uuid = Map.get(context, :uuid)
     case email_registered?(value) do
-      true -> {:error, "has already been taken"}
+      true -> {:error, "This email is already registered."}
       false -> :ok
     end
   end

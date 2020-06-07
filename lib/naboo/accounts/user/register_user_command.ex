@@ -26,13 +26,14 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   validates(:uuid, uuid: true)
 
   validates(:email,
-    presence: true,
-    format: [with: ~r/\S+@\S+\.\S+/, allow_nil: true, allow_blank: true, message: "is invalid"],
+    presence: [message: "Email must be present."],
+    format: [with: ~r/\S+@\S+\.\S+/, allow_nil: true, allow_blank: true, message: "Email must be in the format you@yourco.com"],
     string: true,
     by: &UniqueEmail.validate/2
   )
 
   validates(:password,
+    presence: [message: "Password must be present."],
     by: &StrongPassword.validate/2
   )
 
