@@ -19,7 +19,7 @@ defmodule NabooWeb.Router do
 
     get "/:provider", AuthController, :request
     get "/:provider/callback", AuthController, :callback
-    post "/identity/callback", AuthController, :callback
+    post "/identity/callback", IdentityAuthController, :callback
 
     get "/user/email/:email", UserController, :validate_email_exists
   end

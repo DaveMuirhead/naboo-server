@@ -11,11 +11,15 @@ defmodule NabooWeb.UserView do
   end
 
   def render("user.json", %{user: user}) do
-    %{uuid: user.uuid,
+    %{
+      account_type: user.account_type,
       email: user.email,
-      hashed_password: user.hashed_password,
-      first_name: user.first_name,
-      last_name: user.last_name}
+      email_verified: user.email_verified,
+      full_name: user.full_name,
+      immage_url: user.image_url,
+      nickname: user.nickname,
+      uuid: user.uuid,
+    }
   end
 
   def render("empty.json", %{user: %{}}) do

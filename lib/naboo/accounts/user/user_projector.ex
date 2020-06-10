@@ -12,6 +12,7 @@ defmodule Naboo.Accounts.Projectors.User do
       uuid: event.uuid,
       account_type: event.account_type,
       email: event.email,
+      email_verified: event.email_verified,
       full_name: event.full_name,
       google_uid: event.google_uid,
       hashed_password: event.hashed_password,

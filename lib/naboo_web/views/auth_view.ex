@@ -1,12 +1,25 @@
 defmodule NabooWeb.AuthView do
   use NabooWeb, :view
 
+  def render("account_created.json", %{user: user, token: token}) do
+    %{
+      status: :created,
+      data: %{
+        email: user.email,
+        token: token,
+        uuid: user.uuid
+      },
+      message: "Your account was successfully created and you are logged in. Add this token to Authorization header with a 'Bearer' realm to make authorized requests."
+    }
+  end
+
   def render("signed_in.json", %{user: user, token: token}) do
     %{
       status: :ok,
       data: %{
+        email: user.email,
         token: token,
-        email: user.email
+        uuid: user.uuid
       },
       message: "You are successfully logged in. Add this token to Authorization header with a 'Bearer' realm to make authorized requests."
     }
@@ -28,7 +41,6 @@ defmodule NabooWeb.AuthView do
       message: message
     }
   end
-
 
   def render("error.json", %{errors: errors}) do
     %{

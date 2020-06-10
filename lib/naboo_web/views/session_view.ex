@@ -5,8 +5,9 @@ defmodule NabooWeb.SessionView do
     %{
       status: :ok,
       data: %{
+        email: user.email,
         token: token,
-        email: user.email
+        uuiud: user.uuid
       },
       message: "You are successfully logged in. Add this token to Authorization header with a 'Bearer' realm to make authorized requests."
     }

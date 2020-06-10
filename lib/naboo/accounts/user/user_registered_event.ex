@@ -3,6 +3,7 @@ defmodule Naboo.Accounts.Events.UserRegistered do
   defstruct [
     :account_type,
     :email,
+    :email_verified,
     :full_name,
     :google_uid,
     :hashed_password,

@@ -2,6 +2,7 @@ defmodule Naboo.Accounts.Aggregates.User do
   defstruct [
     :account_type, #:provider or :seeker
     :email,
+    :email_verified,
     :full_name,
     :google_uid,
     :hashed_password,
@@ -23,6 +24,7 @@ defmodule Naboo.Accounts.Aggregates.User do
     %UserRegistered{
       account_type: command.account_type,
       email: command.email,
+      email_verified: command.email_verified,
       full_name: command.full_name,
       google_uid: command.google_uid,
       hashed_password: command.hashed_password,
@@ -40,6 +42,7 @@ defmodule Naboo.Accounts.Aggregates.User do
     %User{user |
       account_type: event.account_type,
       email: event.email,
+      email_verified: event.email_verified,
       full_name: event.full_name,
       google_uid: event.google_uid,
       hashed_password: event.hashed_password,

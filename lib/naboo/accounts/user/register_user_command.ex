@@ -2,6 +2,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   defstruct [
     :account_type, #:provider or :seeker
     :email,
+    :email_verified,
     :full_name,
     :google_uid,
     :hashed_password,
