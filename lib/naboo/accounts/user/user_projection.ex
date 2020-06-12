@@ -6,10 +6,10 @@ defmodule Naboo.Accounts.Projections.User do
 
   schema "accounts_users" do
     field :account_type, :string
+    field :active, :boolean
     field :email, :string, unique: true
     field :email_verified, :boolean
     field :full_name, :string
-    field :google_uid, :string
     field :hashed_password, :string
     field :image_url, :string
     field :nickname, :string

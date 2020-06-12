@@ -3,51 +3,47 @@ defmodule NabooWeb.UserController do
 
   alias Naboo.Accounts
   alias Naboo.Accounts.Projections.User
+  alias NabooWeb.Avatar
+  alias NabooWeb.Mailer
+  alias NabooWeb.Token
+  alias NabooWeb.Router.Helpers, as: Routes
 
   action_fallback NabooWeb.FallbackController
 
-  def show(conn, %{"uuid" => uuid}) do
-    case Accounts.user_by_uuid(uuid) do
-      user_with_uuid ->
-        conn
-        |> put_status(:ok)
-        |> render("show.json", user: user_with_uuid)
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> render("empty.json", user: %{})
-    end
-  end
+  # ############################################################
+  # Query User
+  # ############################################################
 
+  # GET /users/current
   def current(conn, _params) do
     with user = Guardian.Plug.current_resource(conn),
          jwt = Guardian.Plug.current_token(conn)
-      do
+    do
       conn
       |> put_status(:ok)
       |> render("show.json", user: user, jwt: jwt)
     end
   end
 
-  @doc """
-  Find user by email, report :found or :not_found with empty body.
-  A JSON object of the following structure is expected:
-  {
-    "email": ""
-  }
-  """
-  def validate_email_exists(conn, params) do
-    email = Map.get(params, "email")
-    case Accounts.user_by_email(email) do
-      nil ->
-        conn
-        |> put_status(:not_found)
-        |> render("empty.json", user: %{})
-      _user ->
-        conn
-        |> put_status(:ok)
-        |> render("empty.json", user: %{})
+  # GET /users/:uuid
+  def profile(conn, params) do
+    uuid = params["uuid"]
+    with user <- Accounts.user_by_uuid(uuid) do
+      conn
+      |> put_status(:ok)
+      |> render("show.json", user: user)
     end
+  end
+
+  # ############################################################
+  # Update User
+  # ############################################################
+
+  # PATCH /users/:uuid
+  def update(conn, params) do
+    IO.puts("params=")
+    IO.inspect(params)
+    {:error, :not_implemented}
   end
 
 end

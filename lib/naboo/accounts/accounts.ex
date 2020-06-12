@@ -1,8 +1,8 @@
 defmodule Naboo.Accounts do
 
-  alias Naboo.Accounts.Commands.{RegisterUser}
+  alias Naboo.Accounts.Commands.{RegisterUser, UpdateUser}
   alias Naboo.Accounts.Projections.{User}
-  alias Naboo.Accounts.Queries.{UserByEmail, UserByGoogleUid}
+  alias Naboo.Accounts.Queries.{UserByEmail, UserByUuid}
   alias Naboo.Repo
   alias Naboo.App
 
@@ -29,20 +29,28 @@ defmodule Naboo.Accounts do
     end
   end
 
+  def update_user(%User{uuid: uuid} = user, attrs \\ %{}) do
+    update_user = attrs |> UpdateUser.new()
+    with :ok <- App.dispatch(update_user, consistency: :strong) do
+      get(User, uuid)
+    end
+  end
+
   # ################################################################################
   # Queries
   # ################################################################################
+
+  def user_by_uuid(uuid) when is_binary(uuid) do
+    uuid
+    |> String.downcase()
+    |> UserByUuid.new()
+    |> Repo.one()
+  end
 
   def user_by_email(email) when is_binary(email) do
     email
     |> String.downcase()
     |> UserByEmail.new()
-    |> Repo.one()
-  end
-
-  def user_by_google_uid(uid) when is_binary(uid) do
-    uid
-    |> UserByGoogleUid.new()
     |> Repo.one()
   end
 

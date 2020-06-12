@@ -20,7 +20,11 @@ defmodule Naboo.MixProject do
   def application do
     [
       mod: {Naboo.Application, []},
-      extra_applications: [:eventstore, :os_mon, :ueberauth_auth0]
+      extra_applications: [
+        :eventstore,
+        :os_mon,
+#        :ueberauth_auth0
+      ]
     ]
   end
 
@@ -33,32 +37,47 @@ defmodule Naboo.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # Phoenix core
       {:phoenix, "~> 1.4.17"},
-      {:phoenix_ecto, "~> 4.1"},
-      {:ecto_sql, "~> 3.4"},
-      {:postgrex, ">= 0.0.0"},
-      {:phoenix_live_dashboard, "~> 0.2.0"},
-      {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
+
+      # Monitoring
+      {:phoenix_live_dashboard, "~> 0.2.0"},
+      {:telemetry_metrics, "~> 0.4"},
+      {:telemetry_poller, "~> 0.4"},
+
+      # Persistence / CQRS+ES
+      {:phoenix_ecto, "~> 4.1"},
+      {:ecto_sql, "~> 3.4"},
+      {:postgrex, ">= 0.0.0"},
       {:commanded, "~> 1.0.1"},
       {:commanded_eventstore_adapter, "~> 1.0"},
       {:commanded_ecto_projections, "~> 1.0"},
       {:eventstore, "~> 1.0.2"},
-      {:ex_machina, "~> 2.4", only: :test},
-      {:elixir_uuid, "~> 1.2"},
       {:exconstructor, "~> 1.1"},
-      {:poison, "~> 3.1"},
       {:vex, "~> 0.8"},
+
+      # Security
       {:bcrypt_elixir, "~> 1.0"},
       {:comeonin, "~> 4.0"},
       {:guardian, "~> 2.0"},
-      {:ueberauth_auth0, "~> 0.4"},
-      {:ueberauth_google, "~> 0.9"},
-      {:ueberauth_identity, "~> 0.3"},
-      {:cors_plug, "~> 2.0"}
+      {:cors_plug, "~> 2.0"},
+
+      # Email
+      {:bamboo, "~> 1.4"},
+      {:bamboo_smtp, "~> 2.1.0"},
+
+      # File Upload
+      {:arc, "~> 0.11.0"},
+
+      # Utilities
+      {:elixir_uuid, "~> 1.2"},
+      {:poison, "~> 3.1"},
+
+      # Testing
+      {:ex_machina, "~> 2.4", only: :test},
     ]
   end
 

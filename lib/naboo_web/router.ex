@@ -14,28 +14,62 @@ defmodule NabooWeb.Router do
     plug Guardian.Plug.EnsureAuthenticated
   end
 
-  scope "/v1/auth", NabooWeb do
+  scope "/api", NabooWeb do
     pipe_through :maybe_authenticated
 
-    get "/:provider", AuthController, :request
-    get "/:provider/callback", AuthController, :callback
-    post "/identity/callback", IdentityAuthController, :callback
+    # User exists query - 200 OK or 404 Not Found
+    get    "/users/email/:email",    EmailController,     :exists
 
-    get "/user/email/:email", UserController, :validate_email_exists
+    # Starts registration flow - 201 Created
+    post   "/registrations",         RegistrationController, :start_registration
+
+    # Completes registration flow - 200 OK
+    # Expects {"secret":"", "code":""}, verifies code, marks user as
+    # active and email verified, responds with 200 OK and user plus access token
+    patch  "/registrations/:uuid",   RegistrationController, :complete_registration
+
+    # Sign in
+    post   "/sessions",              SessionController,   :sign_in
+
+    # Sign out
+    delete "/sessions",              SessionController,   :sign_out
+
+    # Starts password reset flow for possibly unauthenticated user
+    # Expects {"email":""} body, delivers verification email and responds with 202 Accepted
+    # post   "/password-resets",       PasswordController,  :start_password_reset
+
+    # Completes password reset flow for possibly unauthenticated user
+    # Expects {"token":"","new_password":""}, replaces password and responds with 204 No Content
+    # put    "/password-resets/:uuid", PasswordController,  :complete_password_reset
+
   end
 
-#  scope "/v1/api", NabooWeb do
-#    pipe_through :maybe_authenticated
-#
-#    post "/register", RegistrationController, :register #this one stays
-#    post "/sign_in", SessionController, :sign_in # this one goes away
-#  end
-
-  scope "/v1/api", NabooWeb do
+  scope "/api", NabooWeb do
     pipe_through [:maybe_authenticated, :authenticated]
 
-    get "/users/:uuid", UserController, :show
-    get "/users/current", UserController, :current
+    # Get profile of current user based on session state
+    get "/users/current",             UserController,   :current
+
+    # Get profile of specified user
+    get "/users/:uuid",               UserController,   :profile
+
+    # Update user
+    patch  "/users/:uuid",            UserController,   :update
+
+    # Change password of current (authenticated) user
+    # Expects {"old_password:"", "new_password":""}, applies change and responds
+    # with 204 No Content
+    # put    "/users/:uuid/password",   PasswordController,  :change_password
+
+    # Starts email verification flow
+    # Expects {"new_email":""}, delivers verification email and responds with 202 Accepted
+    # post   "/email-verifications",    EmailController, :start_email_verification
+
+    # Completes email verification flow
+    # Expects {"secret":"", "new_email":"", "code":""}, verifies code, marks email
+    # as verified and responds with 204 No Content
+    # put    "/email-verifications",    EmailController, :complete_email_verification
+
   end
 
   # Enables LiveDashboard only for development

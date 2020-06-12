@@ -1,4 +1,4 @@
-defmodule Naboo.Accounts.Validators.UniqueEmail do
+defmodule Naboo.Support.Validators.UniqueEmail do
   use Vex.Validator
 
   alias Naboo.Accounts

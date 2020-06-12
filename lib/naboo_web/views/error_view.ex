@@ -1,6 +1,22 @@
 defmodule NabooWeb.ErrorView do
   use NabooWeb, :view
 
+  def render(:not_implemented, _assigns) do
+    "Not yet implemented"
+  end
+
+  def render("401", _assigns) do
+    "Unauthorized"
+  end
+
+  def render("404", _assigns) do
+    "Page not found"
+  end
+
+  def render("500", _assigns) do
+    "Server internal error"
+  end
+
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.
   # def render("500.json", _assigns) do

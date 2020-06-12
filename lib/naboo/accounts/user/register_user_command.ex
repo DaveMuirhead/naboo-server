@@ -2,14 +2,12 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
   defstruct [
     :account_type, #:provider or :seeker
     :email,
-    :email_verified,
     :full_name,
-    :google_uid,
     :hashed_password,
     :image_url,
     :nickname,
     :password,
-    :uuid,
+    :uuid
   ]
 
   use ExConstructor
@@ -17,7 +15,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
 
   alias Naboo.Auth.Authenticator
   alias Naboo.Accounts.Commands.{RegisterUser}
-  alias Naboo.Accounts.Validators.{StrongPassword, UniqueEmail}
+  alias Naboo.Support.Validators.{StrongPassword, UniqueEmail}
 
   validates(:account_type,
     presence: true,

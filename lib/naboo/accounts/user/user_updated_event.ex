@@ -1,10 +1,9 @@
-defmodule Naboo.Accounts.Events.UserRegistered do
+defmodule Naboo.Accounts.Events.UserUpdated do
   @derive Jason.Encoder
   defstruct [
-    :account_type,
-    :email,
+    :active,
+    :email_verified,
     :full_name,
-    :hashed_password,
     :image_url,
     :nickname,
     :uuid

@@ -1,4 +1,4 @@
-defmodule Naboo.Accounts.Validators.StrongPassword do
+defmodule Naboo.Support.Validators.StrongPassword do
   use Vex.Validator
 
 #  "Please choose a stronger password with at least 8 characters, including a minimum of one each of upper and lower case letters, numbers and special characters."

@@ -5,23 +5,18 @@ defmodule NabooWeb.SessionController do
 
   action_fallback NabooWeb.FallbackController
 
-  def sign_in(conn, %{"email" => email, "password" => password}) do
-    case Authenticator.authenticate(email, password) do
-      {:ok, user} ->
-        conn = conn
-        |> Guardian.Plug.sign_in(Naboo.Auth.Guardian, user)
-        token = Guardian.Plug.current_token(conn)
-        render(conn, "signed_in.json", user: user, token: token)
-      {:error, :unauthenticated} ->
-        conn
-        |> put_status(:unauthorized)
-        |> render("error.json", errors: %{"email or password" => ["is invalid"]})
-    end
+  # POST /sessions
+  def sign_in(conn, params) do
+    conn
+    |> put_status(:not_implemented)
+    |> render(NabooWeb.ErrorView, :not_found)
   end
 
-  def sign_out(conn, _params) do
+  # DELETE /sessions
+  def sign_out(conn, params) do
     conn
-    |> Guardian.Plug.sign_out()
-    |> redirect(to: "/login")
+    |> put_status(:not_implemented)
+    |> render(NabooWeb.ErrorView, :not_found)
   end
+
 end

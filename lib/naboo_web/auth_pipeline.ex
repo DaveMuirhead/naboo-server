@@ -1,7 +1,7 @@
 defmodule NabooWeb.AuthPipeline do
   use Guardian.Plug.Pipeline, otp_app: :naboo,
-                              module: Naboo.Guardian,
-                              error_handler: NabooWeb.AuthErrorHandler
+                              module: Naboo.Auth.Guardian,
+                              error_handler: Naboo.Auth.ErrorHandler
 
   # If there is an authorization header, restrict it to an access token and validate it
   plug Guardian.Plug.VerifyHeader, realm: "Bearer"

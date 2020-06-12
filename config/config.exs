@@ -23,7 +23,7 @@ config :naboo, Naboo.App,
 config :naboo, NabooWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "M+VBaBKapyHthgDpVI0jDzaUfruiVKnGnPnGH6zXe3+WVD69p/Z6q+ayLzEgpE96",
-  render_errors: [view: NabooWeb.ErrorView, accepts: ~w(json), layout: false],
+  render_errors: [view: NabooWeb.ErrorView, format: "json", accepts: ~w(json), layout: false],
   pubsub_server: Naboo.PubSub,
   live_view: [signing_salt: "8IVIz68/"]
 
@@ -46,8 +46,32 @@ config :vex,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Bamboo Mailer configuration
+config :naboo, NabooWeb.Mailer,
+  adapter: Bamboo.SMTPAdapter,
+  server: "mail.brsg.io",
+  hostname: "brsg.io",
+  port: 465,
+  username: {:system, "APPS_SMTP_USERNAME"},
+  password: {:system, "APPS_SMTP_PASSWORD"},
+  tls: :if_available,
+  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"],
+  ssl: true,
+  retries: 1,
+  no_mx_lookups: false,
+  auth: :always
+
 # Import configuration for Ueberauth and Guardian with Auth0 as Identify Management service
-import_config "ueberauth-local.exs"
+#import_config "ueberauth-local.exs"
+
+config :naboo, Naboo.Auth.Guardian,
+  allowed_algos: ["HS512"],
+  verify_module: Guardian.JWT,
+  issuer: "Naboo",
+  ttl: {7, :days},
+  allowed_drift: 2000,
+  verify_issuer: true,
+  secret_key: "QkOEq+IOjvDrHnOJNbH3bAT5QQ2xMb7gCvrAFusw7X95Q6TOljy7WGnYP7RLSGPI"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
