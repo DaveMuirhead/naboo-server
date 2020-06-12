@@ -5,15 +5,15 @@ defmodule NabooWeb.ErrorView do
     "Not yet implemented"
   end
 
-  def render("401", _assigns) do
+  def render(:"401", _assigns) do
     "Unauthorized"
   end
 
-  def render("404", _assigns) do
+  def render(:"404", _assigns) do
     "Page not found"
   end
 
-  def render("500", _assigns) do
+  def render(:"500", _assigns) do
     "Server internal error"
   end
 

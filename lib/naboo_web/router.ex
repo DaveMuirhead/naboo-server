@@ -7,7 +7,7 @@ defmodule NabooWeb.Router do
 
   pipeline :maybe_authenticated do
     plug :accepts, ["json"]
-    plug NabooWeb.AuthPipeline
+    plug Naboo.Auth.Pipeline
   end
 
   pipeline :authenticated do

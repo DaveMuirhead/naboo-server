@@ -22,6 +22,7 @@ defmodule Naboo.MixProject do
       mod: {Naboo.Application, []},
       extra_applications: [
         :eventstore,
+        :guardian,
         :os_mon,
 #        :ueberauth_auth0
       ]

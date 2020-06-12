@@ -21,7 +21,7 @@ defmodule NabooWeb.UserController do
     do
       conn
       |> put_status(:ok)
-      |> render("show.json", user: user, jwt: jwt)
+      |> render("user.json", user: user, jwt: jwt)
     end
   end
 
@@ -31,7 +31,7 @@ defmodule NabooWeb.UserController do
     with user <- Accounts.user_by_uuid(uuid) do
       conn
       |> put_status(:ok)
-      |> render("show.json", user: user)
+      |> render("user.json", user: user)
     end
   end
 
