@@ -16,8 +16,6 @@ defmodule NabooWeb.EmailController do
   # GET /users/email/:email
   def exists(conn, params) do
     email = params["email"]
-    IO.puts("exists called with #{email}")
-    IO.inspect(Accounts.user_by_email(email))
     case Accounts.user_by_email(email) do
       %User{} = user ->
         conn
