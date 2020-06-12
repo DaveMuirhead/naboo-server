@@ -15,10 +15,21 @@ defmodule NabooWeb.EmailController do
 
   # GET /users/email/:email
   def exists(conn, params) do
-    # 200 OK if registered or 404 Not Found if not registered
-    conn
-    |> put_status(:not_implemented)
-    |> render(NabooWeb.ErrorView, :not_found)
+    email = params["email"]
+    IO.puts("exists called with #{email}")
+    IO.inspect(Accounts.user_by_email(email))
+    case Accounts.user_by_email(email) do
+      %User{} = user ->
+        conn
+        |> put_status(:ok)
+        |> put_view(NabooWeb.UserView)
+        |> render("empty.json")
+      nil ->
+        conn
+        |> put_status(:not_found)
+        |> put_view(NabooWeb.UserView)
+        |> render("empty.json")
+    end
   end
 
 end
