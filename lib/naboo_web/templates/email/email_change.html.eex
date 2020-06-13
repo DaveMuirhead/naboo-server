@@ -1,0 +1,7 @@
+<h1>Welcome to Naboo!</h1>
+<p>Enter this code to verify your new email address and complete your email address update for Naboo:</p>
+<p><strong><%= @code %></strong></p>
+<p>This code will expire in 10 minutes.</p>
+<p>This message was sent because we received a request to update your email address. If that wasn’t you, ignore this email and change your password immediately.</p>
+<br/>
+<p>-- The Naboo Team</p>

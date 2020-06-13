@@ -2,8 +2,7 @@ defmodule NabooWeb.UserView do
   use NabooWeb, :view
 
   # NOTE: not passing back token
-  def render("user.json", assigns) do
-    user = assigns[:user]
+  def render("user.json", %{user: user}) do
     %{
       account_type: user.account_type,
       active: user.active,
@@ -17,7 +16,6 @@ defmodule NabooWeb.UserView do
   end
 
   def render("empty.json", _assigns) do
-    %{}
   end
 
   end

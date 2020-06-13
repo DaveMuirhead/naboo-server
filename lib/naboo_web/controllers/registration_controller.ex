@@ -3,13 +3,16 @@ defmodule NabooWeb.RegistrationController do
 
   alias Naboo.Accounts
   alias Naboo.Accounts.Projections.User
+  alias NabooWeb.Email
   alias NabooWeb.Mailer
-  alias NabooWeb.Token
   alias NabooWeb.Router.Helpers, as: Routes
+  alias NabooWeb.Token
 
   action_fallback NabooWeb.FallbackController
 
   # POST /registrations
+  # Creates user (inactive, email not verified), sends registration
+  # confirmation email, returns email, token and uuid
   #
   # Request
   # {
@@ -21,7 +24,6 @@ defmodule NabooWeb.RegistrationController do
   #
   # Success Response
   # Status 201 (Created)
-  # Location /api/users/5fd41241-26b2-470d-abd3-8dd10dada1be
   # {
   #  "email": "dave@brsg.io",
   #  "secret": "QTEyOEdDTQ.O5seRh15OJot3...1jJSuj9IAg",
@@ -30,14 +32,46 @@ defmodule NabooWeb.RegistrationController do
   # Error Responses
   # Status 422 (Unprocessable Entity) on validation error
   def start_registration(conn, params) do
-    with {:ok, user} <- Accounts.register_user(params)
-      do
+    with {:ok, user} <- Accounts.register_user(params) do
+      code = verification_code()
       conn
-      |> request_email_verification(user.uuid, user.email)
+      |> request_email_verification(user, code)
+      |> assign_verification_token(user, code)
       |> assign(:user, user)
       |> put_status(:created)
-      |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))
       |> render("registration.json")
+    end
+  end
+
+  # GET /registrations/:uuid
+  # Re-sends registration confirmation email, returns a new secret
+  #
+  # Success Response
+  # 202 (Accepted)
+  # {
+  #  "email": "dave@brsg.io",
+  #  "secret": "QTEyOEdDTQ.O5seRh15OJot3...1jJSuj9IAg",
+  #  "uuid": "5fd41241-26b2-470d-abd3-8dd10dada1be"
+  # }
+  #
+  # Error Responses
+  # Status 400 (Bad Request) if email is already verified
+  def continue_registration(conn, params) do
+    with user = Accounts.user_by_uuid(params["uuid"]) do
+      case user.email_verified do
+        true ->
+          conn
+          |> put_status(:bad_request)
+          |> render("empty.json")
+        false ->
+          code = verification_code()
+          conn
+          |> request_email_verification(user, code)
+          |> assign_verification_token(user, code)
+          |> assign(:user, user)
+          |> put_status(:accepted)
+          |> render("registration.json")
+      end
     end
   end
 
@@ -47,7 +81,9 @@ defmodule NabooWeb.RegistrationController do
   # {"secret":"", "code":""}
   #
   # Success Response
-  # 200 (OK) with UserView user.json
+  # 200 (OK)
+  # Location /api/users/5fd41241-26b2-470d-abd3-8dd10dada1be
+  # { ...user.json... }
   #
   # Error Responses
   #  401 (Unauthorized) if token is expired
@@ -62,6 +98,7 @@ defmodule NabooWeb.RegistrationController do
         conn
         |> assign(:user, user)
         |> put_status(:ok)
+        |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))
         |> put_view(NabooWeb.UserView)
         |> render("user.json")
       end
@@ -72,19 +109,24 @@ defmodule NabooWeb.RegistrationController do
   # Utilities
   # ############################################################
 
-  defp request_email_verification(conn, user_uuid, new_email_address) do
-    # generate verification code between 100000 and 999999 (ensure 6 chars)
-    :random.seed(:erlang.now())
-    code = :random.uniform(899999) + 100000
+  defp request_email_verification(conn, user, code) do
+    Email.confirm_registration(conn, user, code)
+    |> Mailer.deliver_later()
+    conn
+  end
 
-    # send verification code in email
-    Mailer.deliver_email_verification_request(new_email_address, code)
-
-    # store a token encoding the verification code in the user session
-    token_data = build_token_data(user_uuid, Integer.to_string(code))
+  # store a token encoding the verification code in the user session
+  defp assign_verification_token(conn, user, code) do
+    token_data = build_token_data(user.uuid, Integer.to_string(code))
     token = Token.generate_verification_token(token_data)
     conn
     |> assign(:secret, token)
+  end
+
+  defp verification_code()  do
+    # generate verification code between 100000 and 999999 (ensure 6 chars)
+    :random.seed(:erlang.now())
+    :random.uniform(899999) + 100000
   end
 
   defp build_token_data(user_uuid, code) do

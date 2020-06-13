@@ -34,6 +34,7 @@ defmodule NabooWeb.SessionController do
         |> Guardian.Plug.sign_in(user)
         |> put_token_cookie(user)
         |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))
+        |> assign(:user, user)
         |> render("session.json")
       false ->
         conn

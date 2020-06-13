@@ -1,14 +1,15 @@
 defmodule NabooWeb.RegistrationView do
   use NabooWeb, :view
 
-  def render("registration.json", assigns) do
-    user = assigns[:user]
-    secret = assigns[:secret]
+  def render("registration.json", %{user: user, secret: secret}) do
     %{
       uuid: user.uuid,
       email: user.email,
       secret: secret
     }
+  end
+
+  def render("empty.json", _assigns) do
   end
 
 end

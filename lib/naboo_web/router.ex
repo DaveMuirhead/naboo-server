@@ -22,7 +22,17 @@ defmodule NabooWeb.Router do
     get    "/users/email/:email",    EmailController,     :exists
 
     # Starts registration flow - 201 Created
+    # {
+    #  "email": "foo@bar.io",
+    #  "secret": "QTEyOEdDTQ.O5seRh15OJot3...1jJSuj9IAg",
+    #  "uuid": "5fd41241-26b2-470d-abd3-8dd10dada1be"
+    # }
     post   "/registrations",         RegistrationController, :start_registration
+
+    # Continues registration flow - 202 Accepted with empty body
+    # Looks up user by UUID, and re-sends verification email message
+    # to their unverified email address
+    get    "/registrations/:uuid",   RegistrationController, :continue_registration
 
     # Completes registration flow - 200 OK
     # Expects {"secret":"", "code":""}, verifies code, marks user as
@@ -37,11 +47,11 @@ defmodule NabooWeb.Router do
 
     # Starts password reset flow for possibly unauthenticated user
     # Expects {"email":""} body, delivers verification email and responds with 202 Accepted
-    # post   "/password-resets",       PasswordController,  :start_password_reset
+    post   "/password-resets",       PasswordController,  :start_password_reset
 
     # Completes password reset flow for possibly unauthenticated user
     # Expects {"token":"","new_password":""}, replaces password and responds with 204 No Content
-    # put    "/password-resets/:uuid", PasswordController,  :complete_password_reset
+    put    "/password-resets/:uuid", PasswordController,  :complete_password_reset
 
   end
 

@@ -3,8 +3,7 @@ defmodule NabooWeb.SessionView do
 
   alias Naboo.Auth.Guardian
 
-  def render("session.json", assigns) do
-    user = assigns["user"]
+  def render("session.json", %{user: user}) do
     %{
       "uuid": user.uuid,
       "message": "Signed in successfully. See Location header for link to profile."
@@ -24,7 +23,6 @@ defmodule NabooWeb.SessionView do
   end
 
   def render("empty.json", _assigns) do
-    %{}
   end
 
 end
