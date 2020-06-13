@@ -16,12 +16,10 @@ defmodule NabooWeb.UserController do
 
   # GET /users/current
   def current(conn, _params) do
-    with user = Guardian.Plug.current_resource(conn),
-         jwt = Guardian.Plug.current_token(conn)
-    do
+    with user = Guardian.Plug.current_resource(conn) do
       conn
       |> put_status(:ok)
-      |> render("user.json", user: user, jwt: jwt)
+      |> render("user.json", user: user)
     end
   end
 
@@ -41,9 +39,13 @@ defmodule NabooWeb.UserController do
 
   # PATCH /users/:uuid
   def update(conn, params) do
-    IO.puts("params=")
-    IO.inspect(params)
-    {:error, :not_implemented}
+    with user <- Guardian.Plug.current_resource(conn),
+         {:ok, user} <- Accounts.update_user(user, params)
+    do
+      conn
+      |> put_status(:ok)
+      |> render("user.json", user: user)
+    end
   end
 
 end
