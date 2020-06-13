@@ -12,6 +12,7 @@ defmodule NabooWeb.Router do
 
   pipeline :authenticated do
     plug Guardian.Plug.EnsureAuthenticated
+    plug Naboo.Auth.VerifyActive
   end
 
   scope "/api", NabooWeb do

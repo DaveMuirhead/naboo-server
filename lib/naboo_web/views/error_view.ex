@@ -1,16 +1,16 @@
 defmodule NabooWeb.ErrorView do
   use NabooWeb, :view
 
-  def render(:not_implemented, _assigns) do
-    "Not yet implemented"
-  end
-
   def render(:"401", _assigns) do
-    "Unauthorized"
+    %{
+      "message": "You are not authorized to access this resource."
+    }
   end
 
   def render(:"404", _assigns) do
-    "Page not found"
+    %{
+      "message": "Resource not found"
+    }
   end
 
   def render(:"500", _assigns) do

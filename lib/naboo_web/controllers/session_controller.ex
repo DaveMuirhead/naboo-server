@@ -28,10 +28,18 @@ defmodule NabooWeb.SessionController do
   # ############################################################
 
   defp maybe_admit_user({:ok, user}, conn) do
-    conn
-    |> Guardian.Plug.sign_in(user)
-    |> put_token_cookie(user)
-    |> render("session.json")
+    case user.active do
+      true ->
+        conn
+        |> Guardian.Plug.sign_in(user)
+        |> put_token_cookie(user)
+        |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))
+        |> render("session.json")
+      false ->
+        conn
+        |> put_status(:forbidden)
+        |> render("inactive.json")
+    end
   end
 
   defp maybe_admit_user({:error, message}, conn) do
