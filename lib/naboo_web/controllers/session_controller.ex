@@ -17,22 +17,20 @@ defmodule NabooWeb.SessionController do
   defp maybe_admit_user({:ok, user}, conn) do
     conn
     |> Guardian.Plug.sign_in(user)
-    |> secure_token(user)
+    |> store_token_securely(user)
     |> render("session.json")
   end
 
-  defp secure_token(conn, user) do
+  defp store_token_securely(conn, user) do
     token = Guardian.Plug.current_token(conn)
-    IO.puts("the token going into the cookie is")
-    IO.inspect(token)
     conn
     |> put_resp_cookie(
-        "naboo_access",                # key
-        token,                         # value
-        max_age: (7 * 24 * 60 * 60),   # valid for 7 days
-        http_only: true,               # cookie not accessible outside of HTTP
-        #secure: true,                  # cookie may only sent over HTTPS
-        encrypt: true                  # encrypt the cookie
+        Guardian.access_token_cookie_key(), # key
+        token,                              # value
+        max_age: (7 * 24 * 60 * 60),        # valid for 7 days
+        http_only: true,                    # cookie not accessible outside of HTTP
+        #secure: true,                       # cookie may only sent over HTTPS
+        encrypt: true                       # encrypt the cookie
       )
   end
 

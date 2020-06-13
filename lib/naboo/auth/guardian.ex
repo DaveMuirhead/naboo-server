@@ -8,6 +8,8 @@ defmodule Naboo.Auth.Guardian do
   alias Naboo.Accounts
   alias Naboo.Accounts.Projections.User
 
+  def access_token_cookie_key, do: "naboo_access"
+
   def subject_for_token(%User{} = user, _claims), do: {:ok, "User:#{user.uuid}"}
   def subject_for_token(_resource, _claims), do: {:error, "Unknown resource type"}
 
