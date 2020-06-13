@@ -12,9 +12,12 @@ defmodule Naboo.Auth.LoadJwtFromCookie do
   end
 
   defp add_auth_header(conn) do
-    jwt = conn.cookies[Guardian.access_token_cookie_key()]
-    conn
-    |> put_req_header("authorization", "Bearer " <> jwt)
+    case conn.cookies[Guardian.access_token_cookie_key()] do
+      nil -> conn
+      jwt ->
+        conn
+        |> put_req_header("authorization", "Bearer " <> jwt)
+    end
   end
 
 end
