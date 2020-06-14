@@ -36,14 +36,15 @@ defmodule NabooWeb.PasswordController do
   # PATCH /password-resets/:uuid
   #
   # Request
-  # {"secret":"", "code":""}
+  # {"secret":"", "password":""}
   #
   # Success Response
   # 200 (OK) with UserView user.json
   #
   # Error Responses
   #  401 (Unauthorized) if token is expired
-  def complete_password_reset(conn, params) do
+  def complete_password_reset(conn, %{"secret" => secret, "password" => password}) do
+
   end
 
   # ############################################################

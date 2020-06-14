@@ -3,6 +3,7 @@ defmodule NabooWeb.RegistrationController do
 
   alias Naboo.Accounts
   alias Naboo.Accounts.Projections.User
+  alias Naboo.Auth.Session
   alias NabooWeb.Email
   alias NabooWeb.Mailer
   alias NabooWeb.Router.Helpers, as: Routes
@@ -56,8 +57,8 @@ defmodule NabooWeb.RegistrationController do
   #
   # Error Responses
   # Status 400 (Bad Request) if email is already verified
-  def continue_registration(conn, params) do
-    with user = Accounts.user_by_uuid(params["uuid"]) do
+  def continue_registration(conn, %{"uuid" => uuid}) do
+    with user = Accounts.user_by_uuid(uuid) do
       case user.email_verified do
         true ->
           conn
@@ -87,15 +88,16 @@ defmodule NabooWeb.RegistrationController do
   #
   # Error Responses
   #  401 (Unauthorized) if token is expired
-  def complete_registration(conn, params) do
-    token = params["secret"]
-    token_data = build_token_data(params["uuid"],  params["code"])
+  def complete_registration(conn, %{"secret" => token, "uuid" => uuid, "code" => code}) do
+    token_data = build_token_data(uuid,  code)
     with {:ok, :matched} <- Token.check_verification_token(token, token_data),
-         user = Accounts.user_by_uuid(params["uuid"])
+         user = Accounts.user_by_uuid(uuid)
     do
       updates = %{uuid: user.uuid, active: true, email_verified: true}
       with {:ok, %User{} = user} <- Accounts.update_user(user, updates) do
         conn
+        |> Guardian.Plug.sign_in(user)
+        |> Session.put_token_cookie()
         |> assign(:user, user)
         |> put_status(:ok)
         |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))

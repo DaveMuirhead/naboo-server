@@ -5,6 +5,7 @@ defmodule NabooWeb.SessionController do
   alias Naboo.Accounts.Projections.User
   alias Naboo.Auth.Authenticator
   alias Naboo.Auth.Guardian
+  alias Naboo.Auth.Session
 
   action_fallback NabooWeb.FallbackController
 
@@ -17,7 +18,7 @@ defmodule NabooWeb.SessionController do
   # DELETE /sessions
   def sign_out(conn, params) do
     conn
-    |> del_token_cookie()
+    |> Session.del_token_cookie()
     |> Guardian.Plug.sign_out()
     |> put_status(:ok)
     |> render("empty.json")
@@ -32,7 +33,7 @@ defmodule NabooWeb.SessionController do
       true ->
         conn
         |> Guardian.Plug.sign_in(user)
-        |> put_token_cookie(user)
+        |> Session.put_token_cookie()
         |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))
         |> assign(:user, user)
         |> render("session.json")
@@ -47,33 +48,6 @@ defmodule NabooWeb.SessionController do
     conn
     |> put_status(:unauthorized)
     |> render(:"401")
-  end
-
-  defp put_token_cookie(conn, user) do
-    token = Guardian.Plug.current_token(conn)
-    conn
-    |> put_resp_cookie(
-        Guardian.access_token_cookie_key(), # key
-        token,                              # value
-        token_cookie_options()              # options
-      )
-  end
-
-  defp del_token_cookie(conn) do
-    conn
-    |> delete_resp_cookie(
-         Guardian.access_token_cookie_key(),
-         token_cookie_options()
-       )
-  end
-
-  defp token_cookie_options()  do
-    [
-      max_age: (7 * 24 * 60 * 60),        # valid for 7 days
-      http_only: true,                    # cookie not accessible outside of HTTP
-      #secure: true,                       # cookie may only sent over HTTPS
-      encrypt: true                       # encrypt the cookie
-    ]
   end
 
 end
