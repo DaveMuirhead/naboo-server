@@ -13,13 +13,18 @@ defmodule Naboo.Accounts.Aggregates.User do
   ]
 
   alias Naboo.Accounts.Aggregates.{User}
-  alias Naboo.Accounts.Commands.{RegisterUser, UpdateUser}
+  alias Naboo.Accounts.Commands.{
+    RegisterUser,
+    ResetPassword,
+    UpdateUser,
+  }
   alias Naboo.Accounts.Events.{
     UserActiveChanged,
     UserEmailVerifiedChanged,
     UserFullNameChanged,
     UserImageUrlChanged,
     UserNicknameChanged,
+    UserPasswordReset,
     UserRegistered,
   }
 
@@ -56,6 +61,59 @@ defmodule Naboo.Accounts.Aggregates.User do
         end
       end)
   end
+
+  def execute(%User{} = _user, %ResetPassword{} = reset_password) do
+    %UserPasswordReset{
+      uuid: reset_password.uuid,
+      hashed_password: reset_password.hashed_password
+    }
+  end
+
+
+  # ################################################################################
+  # Apply Events
+  # ################################################################################
+
+  def apply(%User{} = user, %UserRegistered{} = event) do
+    %User{user |
+      account_type: event.account_type,
+      email: event.email,
+      full_name: event.full_name,
+      hashed_password: event.hashed_password,
+      image_url: event.image_url,
+      nickname: event.nickname,
+      uuid: event.uuid
+    }
+  end
+
+  def apply(%User{} = user, %UserActiveChanged{active: active}) do
+    %User{user | active: active}
+  end
+
+  def apply(%User{} = user, %UserEmailVerifiedChanged{email_verified: email_verified}) do
+    %User{user | email_verified: email_verified}
+  end
+
+  def apply(%User{} = user, %UserFullNameChanged{full_name: full_name}) do
+    %User{user | full_name: full_name}
+  end
+
+  def apply(%User{} = user, %UserImageUrlChanged{image_url: image_url}) do
+    %User{user | image_url: image_url}
+  end
+
+  def apply(%User{} = user, %UserNicknameChanged{nickname: nickname}) do
+    %User{user | nickname: nickname}
+  end
+
+  def apply(%User{} = user, %UserPasswordReset{hashed_password: hashed_password}) do
+    %User{user | hashed_password: hashed_password}
+  end
+
+
+  # ################################################################################
+  # Helpers
+  # ################################################################################
 
   defp active_changed(%User{}, %UpdateUser{active: nil}), do: nil
   defp active_changed(%User{active: active}, %UpdateUser{active: active}), do: nil
@@ -102,41 +160,5 @@ defmodule Naboo.Accounts.Aggregates.User do
     }
   end
 
-
-  # ################################################################################
-  # Apply Events
-  # ################################################################################
-
-  def apply(%User{} = user, %UserRegistered{} = event) do
-    %User{user |
-      account_type: event.account_type,
-      email: event.email,
-      full_name: event.full_name,
-      hashed_password: event.hashed_password,
-      image_url: event.image_url,
-      nickname: event.nickname,
-      uuid: event.uuid
-    }
-  end
-
-  def apply(%User{} = user, %UserActiveChanged{active: active}) do
-    %User{user | active: active}
-  end
-
-  def apply(%User{} = user, %UserEmailVerifiedChanged{email_verified: email_verified}) do
-    %User{user | email_verified: email_verified}
-  end
-
-  def apply(%User{} = user, %UserFullNameChanged{full_name: full_name}) do
-    %User{user | full_name: full_name}
-  end
-
-  def apply(%User{} = user, %UserImageUrlChanged{image_url: image_url}) do
-    %User{user | image_url: image_url}
-  end
-
-  def apply(%User{} = user, %UserNicknameChanged{nickname: nickname}) do
-    %User{user | nickname: nickname}
-  end
 
 end

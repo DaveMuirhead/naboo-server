@@ -20,8 +20,7 @@ defmodule NabooWeb.SessionController do
     conn
     |> Session.del_token_cookie()
     |> Guardian.Plug.sign_out()
-    |> put_status(:ok)
-    |> render("empty.json")
+    |> send_resp(200, "")
   end
 
   # ############################################################
@@ -47,7 +46,7 @@ defmodule NabooWeb.SessionController do
   defp maybe_admit_user({:error, message}, conn) do
     conn
     |> put_status(:unauthorized)
-    |> render(:"401")
+    |> render(:unauthorized)
   end
 
 end

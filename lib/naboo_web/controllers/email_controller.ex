@@ -19,14 +19,10 @@ defmodule NabooWeb.EmailController do
     case Accounts.user_by_email(email) do
       %User{} = user ->
         conn
-        |> put_status(:ok)
-        |> put_view(NabooWeb.UserView)
-        |> render("empty.json")
+        |> send_resp(200, "")
       nil ->
         conn
-        |> put_status(:not_found)
-        |> put_view(NabooWeb.UserView)
-        |> render("empty.json")
+        |> send_resp(401, "")
     end
   end
 

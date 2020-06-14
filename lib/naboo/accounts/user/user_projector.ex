@@ -10,6 +10,7 @@ defmodule Naboo.Accounts.Projectors.User do
     UserFullNameChanged,
     UserImageUrlChanged,
     UserNicknameChanged,
+    UserPasswordReset,
     UserRegistered,
     }
   alias Naboo.Accounts.Projections.{User}
@@ -52,6 +53,10 @@ defmodule Naboo.Accounts.Projectors.User do
     %UserNicknameChanged{uuid: uuid, nickname: nickname},
     fn multi -> update_user(multi, uuid, nickname: nickname) end
   )
+
+  project(%UserPasswordReset{uuid: uuid, hashed_password: hashed_password}, fn multi ->
+    update_user(multi, uuid, hashed_password: hashed_password)
+  end)
 
   defp update_user(multi, user_uuid, changes) do
     Ecto.Multi.update_all(multi, :user, user_query(user_uuid), set: changes)

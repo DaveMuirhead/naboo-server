@@ -10,7 +10,7 @@ defmodule NabooWeb.SessionView do
     }
   end
 
-  def render(:"401", _assigns) do
+  def render("unauthorized.json", _assigns) do
     %{
       "message": "You are not authorized to access this resource."
     }
@@ -20,9 +20,6 @@ defmodule NabooWeb.SessionView do
     %{
       "message": "This account has been deactivated. Contact support for assistance in re-activating it."
     }
-  end
-
-  def render("empty.json", _assigns) do
   end
 
 end

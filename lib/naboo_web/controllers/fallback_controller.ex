@@ -54,4 +54,13 @@ defmodule NabooWeb.FallbackController do
     |> render(:"500")
   end
 
+  def call(conn, other) do
+    IO.puts("FallbackController.call(conn, other) was executed")
+    IO.inspect(other)
+    conn
+    |> put_status(:internal_server_error)
+    |> put_view(NabooWeb.ErrorView)
+    |> render(:"500")
+  end
+
 end

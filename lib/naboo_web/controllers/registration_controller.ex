@@ -3,6 +3,7 @@ defmodule NabooWeb.RegistrationController do
 
   alias Naboo.Accounts
   alias Naboo.Accounts.Projections.User
+  alias Naboo.Auth.Guardian
   alias Naboo.Auth.Session
   alias NabooWeb.Email
   alias NabooWeb.Mailer

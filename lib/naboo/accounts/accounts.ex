@@ -1,6 +1,6 @@
 defmodule Naboo.Accounts do
 
-  alias Naboo.Accounts.Commands.{RegisterUser, UpdateUser}
+  alias Naboo.Accounts.Commands.{RegisterUser, ResetPassword, UpdateUser}
   alias Naboo.Accounts.Projections.{User}
   alias Naboo.Accounts.Queries.{UserByEmail, UserByUuid}
   alias Naboo.Repo
@@ -12,26 +12,28 @@ defmodule Naboo.Accounts do
 
   def register_user(attrs \\ %{}) do
     uuid = UUID.uuid4()
-
     register_user = attrs
     |> assign(:uuid, uuid)
     |> RegisterUser.new()
     |> RegisterUser.downcase_email()
     |> RegisterUser.hash_password()
-
     with :ok <- App.dispatch(register_user, consistency: :strong) do
       get(User, uuid)
-    else
-      reply ->
-        IO.puts("App.dispatch of RegisterUser failed with reply")
-        IO.inspect(reply)
-        reply
     end
   end
 
   def update_user(%User{uuid: uuid} = user, attrs \\ %{}) do
     update_user = attrs |> UpdateUser.new()
     with :ok <- App.dispatch(update_user, consistency: :strong) do
+      get(User, uuid)
+    end
+  end
+
+  def reset_password(%{"uuid" => uuid, "password" => password} = attrs \\ %{}) do
+    reset_password = attrs
+    |> ResetPassword.new()
+    |> ResetPassword.hash_password()
+    with :ok <- App.dispatch(reset_password, consistency: :strong) do
       get(User, uuid)
     end
   end

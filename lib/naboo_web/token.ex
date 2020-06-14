@@ -22,7 +22,8 @@ defmodule NabooWeb.Token do
   def decrypt_token(token) do
     case Phoenix.Token.decrypt(NabooWeb.Endpoint, @secret, token, max_age: @max_age) do
       {:ok, data} -> data
-      _ -> ""
+      {:error, :expired} -> {:error, :expired}
+      {:error, :invalid} -> {:error, :invalid}
     end
   end
 end

@@ -46,12 +46,14 @@ defmodule NabooWeb.Router do
     delete "/sessions",              SessionController,   :sign_out
 
     # Starts password reset flow for possibly unauthenticated user
-    # Expects {"email":""} body, delivers verification email and responds with 202 Accepted
+    # Expects {"email":"",  "reset_form_url": ""} body, delivers verification email
+    # and responds with 202 Accepted
     post   "/password-resets",       PasswordController,  :start_password_reset
 
     # Completes password reset flow for possibly unauthenticated user
-    # Expects {"token":"","new_password":""}, replaces password and responds with 204 No Content
-    put    "/password-resets/:uuid", PasswordController,  :complete_password_reset
+    # Expects {"secret":"", "email":"", "password":""}, replaces password
+    # and responds with 204 No Content
+    patch  "/password-resets/:secret", PasswordController,  :complete_password_reset
 
   end
 

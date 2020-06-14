@@ -3,7 +3,7 @@ defmodule NabooWeb.PasswordView do
 
   def render("accepted.json", assigns) do
     %{
-      "message": "Request accepted. Submit token provided in email with new password via PATCH /password-resets."
+      "message": "Request accepted. Submit {\"secret\":\"\", \"email\":\"\", \"password\":\"\"} via PATCH /password-resets."
     }
   end
 
