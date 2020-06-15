@@ -13,10 +13,7 @@ defmodule NabooWeb.PasswordController do
   # POST /password-resets
   #
   # Request
-  # {
-  #	  "email": "",
-  #   "reset_form_url": ""
-  # }
+  # { "email": "", "reset_form_url": "" }
   #
   # Success Response
   # Status 202 (Accepted)
@@ -50,6 +47,37 @@ defmodule NabooWeb.PasswordController do
     do
       conn
         |> send_resp(200, "")
+    end
+  end
+
+  # PATCH /users/:uuid/password
+  #
+  # Request
+  # {"old_password:"", "new_password":""}
+  # Success Response
+  # 200 (OK) with no content
+  #
+  # Error Responses
+  #  401 (Unauthorized) if old_password does not match current_password
+  #  422 (Unprocessable Entity) if any validation error occurs
+  def change_password(conn, %{"old_password" => old_password, "new_password" => new_password} = attrs) do
+    with user <- Guardian.Plug.current_resource(conn),
+         {:ok, user} <- Accounts.change_password(user, attrs)
+    do
+      conn
+      |> send_resp(200, "")
+    else
+      {:error, :validation_failure, %{password: [:unuthenticated]}} ->
+        conn
+        |> send_resp(401, "")
+      {:error, :validation_failure, errors} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> put_view(NabooWeb.ValidationView)
+        |> render("error.json", errors: errors)
+      _ ->
+        conn
+        |> send_resp(422, "")
     end
   end
 

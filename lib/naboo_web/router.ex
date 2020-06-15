@@ -61,10 +61,10 @@ defmodule NabooWeb.Router do
     pipe_through [:maybe_authenticated, :authenticated]
 
     # Get profile of current user based on session state
-    get "/users/current",             UserController,   :current
+    get    "/users/current",             UserController,   :current
 
     # Get profile of specified user
-    get "/users/:uuid",               UserController,   :profile
+    get    "/users/:uuid",               UserController,   :profile
 
     # Update user
     patch  "/users/:uuid",            UserController,   :update
@@ -72,7 +72,7 @@ defmodule NabooWeb.Router do
     # Change password of current (authenticated) user
     # Expects {"old_password:"", "new_password":""}, applies change and responds
     # with 204 No Content
-    # put    "/users/:uuid/password",   PasswordController,  :change_password
+    put    "/users/:uuid/password",   PasswordController,  :change_password
 
     # Starts email verification flow
     # Expects {"new_email":""}, delivers verification email and responds with 202 Accepted

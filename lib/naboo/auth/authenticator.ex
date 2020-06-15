@@ -16,10 +16,23 @@ defmodule Naboo.Auth.Authenticator do
     end
   end
 
+  def authenticate_by_uuid(uuid, password) do
+    with {:ok, user} <- user_by_uuid(uuid) do
+      check_password(user, password)
+    end
+  end
+
   defp user_by_email(email) do
     case Accounts.user_by_email(email) do
       user -> {:ok, user}
       nil -> {:error, :unauthenticated}
+    end
+  end
+
+  defp user_by_uuid(uuid) do
+    case Accounts.user_by_uuid(uuid) do
+      nil -> {:error, :unauthenticated}
+      user -> {:ok, user}
     end
   end
 

@@ -14,6 +14,7 @@ defmodule Naboo.Accounts.Aggregates.User do
 
   alias Naboo.Accounts.Aggregates.{User}
   alias Naboo.Accounts.Commands.{
+    ChangePassword,
     RegisterUser,
     ResetPassword,
     UpdateUser,
@@ -24,6 +25,7 @@ defmodule Naboo.Accounts.Aggregates.User do
     UserFullNameChanged,
     UserImageUrlChanged,
     UserNicknameChanged,
+    UserPasswordChanged,
     UserPasswordReset,
     UserRegistered,
   }
@@ -44,7 +46,7 @@ defmodule Naboo.Accounts.Aggregates.User do
     }
   end
 
-  def execute(%User{} = user, %UpdateUser{} = update) do
+  def execute(%User{} = user, %UpdateUser{} = command) do
     Enum.reduce(
       [
         &active_changed/2,
@@ -55,17 +57,24 @@ defmodule Naboo.Accounts.Aggregates.User do
       ],
       [],
       fn (change, events) ->
-        case change.(user, update) do
+        case change.(user, command) do
           nil -> events
           event -> [event | events]
         end
       end)
   end
 
-  def execute(%User{} = _user, %ResetPassword{} = reset_password) do
+  def execute(%User{} = _user, %ResetPassword{} = command) do
     %UserPasswordReset{
-      uuid: reset_password.uuid,
-      hashed_password: reset_password.hashed_password
+      uuid: command.uuid,
+      hashed_password: command.hashed_password
+    }
+  end
+
+  def execute(%User{} = _user, %ChangePassword{} = command) do
+    %UserPasswordChanged{
+      uuid: command.uuid,
+      hashed_password: command.new_hashed_password
     }
   end
 
@@ -109,6 +118,11 @@ defmodule Naboo.Accounts.Aggregates.User do
   def apply(%User{} = user, %UserPasswordReset{hashed_password: hashed_password}) do
     %User{user | hashed_password: hashed_password}
   end
+
+  def apply(%User{} = user, %UserPasswordChanged{hashed_password: hashed_password}) do
+    %User{user | hashed_password: hashed_password}
+  end
+
 
 
   # ################################################################################

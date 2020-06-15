@@ -10,6 +10,7 @@ defmodule Naboo.Accounts.Projectors.User do
     UserFullNameChanged,
     UserImageUrlChanged,
     UserNicknameChanged,
+    UserPasswordChanged,
     UserPasswordReset,
     UserRegistered,
     }
@@ -55,6 +56,10 @@ defmodule Naboo.Accounts.Projectors.User do
   )
 
   project(%UserPasswordReset{uuid: uuid, hashed_password: hashed_password}, fn multi ->
+    update_user(multi, uuid, hashed_password: hashed_password)
+  end)
+
+  project(%UserPasswordChanged{uuid: uuid, hashed_password: hashed_password}, fn multi ->
     update_user(multi, uuid, hashed_password: hashed_password)
   end)
 
