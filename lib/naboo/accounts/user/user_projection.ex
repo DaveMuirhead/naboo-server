@@ -11,7 +11,7 @@ defmodule Naboo.Accounts.Projections.User do
     field :email_verified, :boolean
     field :full_name, :string
     field :hashed_password, :string
-    field :image_url, :string
+    field :picture, :string
     field :nickname, :string
 
     timestamps()

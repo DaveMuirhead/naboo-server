@@ -9,7 +9,7 @@ defmodule NabooWeb.UserView do
       email: user.email,
       email_verified: user.email_verified,
       full_name: user.full_name,
-      image_url: user.image_url,
+      picture: user.picture,
       nickname: user.nickname,
       uuid: user.uuid,
     }

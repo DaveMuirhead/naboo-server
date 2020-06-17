@@ -59,7 +59,7 @@ defmodule NabooWeb.EmailController do
   #  {"new_email":"", "secret":"", "code":""}
   #
   # Success Response
-  #  200 (OK) with no content
+  #  200 (OK) with updated user structure
   #
   # Error Responses
   #  401 (Unauthorized) if token is expired
@@ -70,7 +70,9 @@ defmodule NabooWeb.EmailController do
            {:ok, %User{} = user} <- Accounts.change_email(user, params)
       do
         conn
-        |> send_resp(200, "")
+        |> put_status(:ok)
+        |> put_view(NabooWeb.UserView)
+        |> render("user.json", user: user)
       end
     end
   end

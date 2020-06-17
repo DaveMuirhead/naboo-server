@@ -3,7 +3,7 @@ defmodule Naboo.Accounts.Commands.UpdateUser do
     active: false,
     email_verified: false,
     full_name: nil,
-    image_url: nil,
+    picture: nil,
     nickname: nil,
     uuid: nil
   ]

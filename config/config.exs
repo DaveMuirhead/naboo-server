@@ -46,32 +46,17 @@ config :vex,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Bamboo Mailer configuration
-config :naboo, NabooWeb.Mailer,
-  adapter: Bamboo.SMTPAdapter,
-  server: "mail.brsg.io",
-  hostname: "brsg.io",
-  port: 465,
-  username: {:system, "APPS_SMTP_USERNAME"},
-  password: {:system, "APPS_SMTP_PASSWORD"},
-  tls: :if_available,
-  allowed_tls_versions: [:tlsv1, :"tlsv1.1", :"tlsv1.2"],
-  ssl: true,
-  retries: 1,
-  no_mx_lookups: false,
-  auth: :always
+# Import configuration for Bamboo mailer
+import_config "bamboo.exs"
 
-# Import configuration for Ueberauth and Guardian with Auth0 as Identify Management service
+# Import configuration for Guardian
+import_config "guardian.exs"
+
+# Import configuration for Ueberauth using local identify management
 #import_config "ueberauth-local.exs"
 
-config :naboo, Naboo.Auth.Guardian,
-  allowed_algos: ["HS512"],
-  verify_module: Guardian.JWT,
-  issuer: "Naboo",
-  ttl: {7, :days},
-  allowed_drift: 2000,
-  verify_issuer: true,
-  secret_key: "QkOEq+IOjvDrHnOJNbH3bAT5QQ2xMb7gCvrAFusw7X95Q6TOljy7WGnYP7RLSGPI"
+# Import configuration for Ueberauth using Auth0
+#import_config "ueberauth-local.exs"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

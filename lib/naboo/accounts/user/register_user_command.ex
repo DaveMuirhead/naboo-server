@@ -4,7 +4,7 @@ defmodule Naboo.Accounts.Commands.RegisterUser do
     :email,
     :full_name,
     :hashed_password,
-    :image_url,
+    :picture,
     :nickname,
     :password,
     :uuid

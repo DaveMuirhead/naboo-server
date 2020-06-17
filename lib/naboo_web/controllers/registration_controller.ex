@@ -103,8 +103,7 @@ defmodule NabooWeb.RegistrationController do
         |> assign(:user, user)
         |> put_status(:ok)
         |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))
-        |> put_view(NabooWeb.UserView)
-        |> render("user.json")
+        |> render(NabooWeb.UserView, "user.json")
       end
     end
   end

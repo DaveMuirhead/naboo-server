@@ -9,7 +9,7 @@ defmodule Naboo.Repo.Migrations.CreateAccountsUsers do
       add :email_verified, :boolean, default: false
       add :full_name, :string
       add :hashed_password, :string
-      add :image_url, :string
+      add :picture, :string
       add :nickname, :string
       add :uuid, :uuid, primary_key: true
 

@@ -5,7 +5,7 @@ defmodule Naboo.Accounts.Events.UserRegistered do
     :email,
     :full_name,
     :hashed_password,
-    :image_url,
+    :picture,
     :nickname,
     :uuid
   ]

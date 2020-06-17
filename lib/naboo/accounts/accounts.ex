@@ -13,7 +13,7 @@ defmodule Naboo.Accounts do
   def register_user(attrs \\ %{}) do
     uuid = UUID.uuid4()
     command =
-      %{attrs | uuid: uuid}
+      Map.put(attrs, :uuid, uuid)
       |> RegisterUser.new()
       |> RegisterUser.downcase_email()
       |> RegisterUser.hash_password()

@@ -9,7 +9,7 @@ defmodule Naboo.Accounts.Projectors.User do
     UserEmailChanged,
     UserEmailVerifiedChanged,
     UserFullNameChanged,
-    UserImageUrlChanged,
+    UserPictureChanged,
     UserNicknameChanged,
     UserPasswordChanged,
     UserPasswordReset,
@@ -25,7 +25,7 @@ defmodule Naboo.Accounts.Projectors.User do
       email_verified: false,
       full_name: event.full_name,
       hashed_password: event.hashed_password,
-      image_url: event.image_url,
+      picture: event.picture,
       nickname: event.nickname,
       uuid: event.uuid
     })
@@ -47,8 +47,8 @@ defmodule Naboo.Accounts.Projectors.User do
   )
 
   project(
-    %UserImageUrlChanged{uuid: uuid, image_url: image_url},
-    fn multi -> update_user(multi, uuid, image_url: image_url) end
+    %UserPictureChanged{uuid: uuid, picture: picture},
+    fn multi -> update_user(multi, uuid, picture: picture) end
   )
 
   project(

@@ -29,7 +29,8 @@ defmodule Naboo.Auth.Session do
       max_age: (7 * 24 * 60 * 60),        # valid for 7 days
       http_only: true,                    # cookie not accessible outside of HTTP
       #secure: true,                       # cookie may only sent over HTTPS
-      encrypt: true                       # encrypt the cookie
+      encrypt: true,                      # encrypt the cookie
+      same_site: true
     ]
   end
 

@@ -5,8 +5,8 @@ defmodule NabooWeb.SessionView do
 
   def render("session.json", %{user: user}) do
     %{
-      "uuid": user.uuid,
-      "message": "Signed in successfully. See Location header for link to profile."
+      message: "Signed in successfully. See Location header for link to user profile.",
+      user: user |> render_one(NabooWeb.UserView, "user.json")
     }
   end
 

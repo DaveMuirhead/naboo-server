@@ -6,7 +6,7 @@ defmodule Naboo.Accounts.Aggregates.User do
     :email_verified,
     :full_name,
     :hashed_password,
-    :image_url,
+    :picture,
     :nickname,
     :password,
     :uuid,
@@ -25,7 +25,7 @@ defmodule Naboo.Accounts.Aggregates.User do
     UserEmailChanged,
     UserEmailVerifiedChanged,
     UserFullNameChanged,
-    UserImageUrlChanged,
+    UserPictureChanged,
     UserNicknameChanged,
     UserPasswordChanged,
     UserPasswordReset,
@@ -42,7 +42,7 @@ defmodule Naboo.Accounts.Aggregates.User do
       email: command.email,
       full_name: command.full_name,
       hashed_password: command.hashed_password,
-      image_url: command.image_url,
+      picture: command.picture,
       nickname: command.nickname,
       uuid: command.uuid
     }
@@ -54,7 +54,7 @@ defmodule Naboo.Accounts.Aggregates.User do
         &active_changed/2,
         &email_verified_changed/2,
         &full_name_changed/2,
-        &image_url_changed/2,
+        &picture_changed/2,
         &nickname_changed/2,
       ],
       [],
@@ -98,7 +98,7 @@ defmodule Naboo.Accounts.Aggregates.User do
       email: event.email,
       full_name: event.full_name,
       hashed_password: event.hashed_password,
-      image_url: event.image_url,
+      picture: event.picture,
       nickname: event.nickname,
       uuid: event.uuid
     }
@@ -116,8 +116,8 @@ defmodule Naboo.Accounts.Aggregates.User do
     %User{user | full_name: full_name}
   end
 
-  def apply(%User{} = user, %UserImageUrlChanged{image_url: image_url}) do
-    %User{user | image_url: image_url}
+  def apply(%User{} = user, %UserPictureChanged{picture: picture}) do
+    %User{user | picture: picture}
   end
 
   def apply(%User{} = user, %UserNicknameChanged{nickname: nickname}) do
@@ -168,12 +168,12 @@ defmodule Naboo.Accounts.Aggregates.User do
     }
   end
 
-  defp image_url_changed(%User{}, %UpdateUser{image_url: ""}), do: nil
-  defp image_url_changed(%User{image_url: image_url}, %UpdateUser{image_url: image_url}), do: nil
-  defp image_url_changed(%User{uuid: uuid}, %UpdateUser{image_url: image_url}) do
-    %UserImageUrlChanged{
+  defp picture_changed(%User{}, %UpdateUser{picture: ""}), do: nil
+  defp picture_changed(%User{picture: picture}, %UpdateUser{picture: picture}), do: nil
+  defp picture_changed(%User{uuid: uuid}, %UpdateUser{picture: picture}) do
+    %UserPictureChanged{
       uuid: uuid,
-      image_url: image_url
+      picture: picture
     }
   end
 
