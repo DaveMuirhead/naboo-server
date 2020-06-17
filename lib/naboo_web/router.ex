@@ -18,70 +18,44 @@ defmodule NabooWeb.Router do
   scope "/api", NabooWeb do
     pipe_through :maybe_authenticated
 
-    # User exists query - 200 OK or 404 Not Found
-    get    "/users/email/:email",    EmailController,     :exists
+    # Check user existence
+    get    "/users/email/:email",           EmailController,     :exists
 
-    # Starts registration flow - 201 Created
-    # {
-    #  "email": "foo@bar.io",
-    #  "secret": "QTEyOEdDTQ.O5seRh15OJot3...1jJSuj9IAg",
-    #  "uuid": "5fd41241-26b2-470d-abd3-8dd10dada1be"
-    # }
-    post   "/registrations",         RegistrationController, :start_registration
-
-    # Continues registration flow - 202 Accepted with empty body
-    # Looks up user by UUID, and re-sends verification email message
-    # to their unverified email address
-    get    "/registrations/:uuid",   RegistrationController, :continue_registration
-
-    # Completes registration flow - 200 OK
-    # Expects {"secret":"", "code":""}, verifies code, marks user as
-    # active and email verified, responds with 200 OK and user plus access token
-    patch  "/registrations/:uuid",   RegistrationController, :complete_registration
+    # Register a user
+    get    "/registrations/:uuid",          RegistrationController, :continue_registration
+    post   "/registrations",                RegistrationController, :start_registration
+    patch  "/registrations/:uuid",          RegistrationController, :complete_registration
 
     # Sign in
-    post   "/sessions",              SessionController,   :sign_in
+    post   "/sessions",                     SessionController,   :sign_in
 
     # Sign out
-    delete "/sessions",              SessionController,   :sign_out
+    delete "/sessions",                     SessionController,   :sign_out
 
-    # Starts password reset flow for possibly unauthenticated user
-    # Expects {"email":"",  "reset_form_url": ""} body, delivers verification email
-    # and responds with 202 Accepted
-    post   "/password-resets",       PasswordController,  :start_password_reset
-
-    # Completes password reset flow for possibly unauthenticated user
-    # Expects {"secret":"", "email":"", "password":""}, replaces password
-    # and responds with 204 No Content
-    patch  "/password-resets/:secret", PasswordController,  :complete_password_reset
+    # Reset password (multi-step process)
+    post   "/password-resets",             PasswordController,  :start_password_reset
+    patch  "/password-resets/:secret",     PasswordController,  :complete_password_reset
 
   end
 
   scope "/api", NabooWeb do
     pipe_through [:maybe_authenticated, :authenticated]
 
-    # Get profile of current user based on session state
-    get    "/users/current",             UserController,   :current
+    # Retrieve profile of signed in user
+    get    "/users/current",                UserController,   :current
 
-    # Get profile of specified user
-    get    "/users/:uuid",               UserController,   :profile
+    # Retrieve profile of specified user
+    get    "/users/:uuid",                  UserController,   :profile
 
     # Update user
-    patch  "/users/:uuid",            UserController,   :update
+    patch  "/users/:uuid",                  UserController,   :update
 
-    # Change password of current (authenticated) user
-    # Expects {"old_password:"", "new_password":""}, applies change and responds
-    # with 204 No Content
-    put    "/users/:uuid/password",   PasswordController,  :change_password
+    # Change password of specified user
+    put    "/users/:uuid/password-changes", PasswordController,  :change_password
 
-    # Starts email verification flow
-    # Expects {"new_email":""}, delivers verification email and responds with 202 Accepted
-    # post   "/email-verifications",    EmailController, :start_email_verification
-
-    # Completes email verification flow
-    # Expects {"secret":"", "new_email":"", "code":""}, verifies code, marks email
-    # as verified and responds with 204 No Content
-    # put    "/email-verifications",    EmailController, :complete_email_verification
+    # Change email (mult-step process)
+    post   "/users/:uuid/email-changes",    EmailController, :start_email_change
+    patch  "/users/:uuid/email-changes",    EmailController, :complete_email_change
 
   end
 

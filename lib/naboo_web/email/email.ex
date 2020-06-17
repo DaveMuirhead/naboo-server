@@ -14,6 +14,16 @@ defmodule NabooWeb.Email do
     |> render("registration_confirmation.html")
   end
 
+  def confirm_email_change(conn, user, new_email, code) do
+    base_email()
+    |> to(new_email)
+    |> subject("Please Confirm Your Email Address")
+    |> assign(:conn, conn)
+    |> assign(:user, user)
+    |> assign(:code, code)
+    |> render("email_change.html")
+  end
+
   def reset_password(conn, email_address, reset_link) do
     base_email()
     |> to(email_address)

@@ -14,6 +14,7 @@ defmodule Naboo.Accounts.Aggregates.User do
 
   alias Naboo.Accounts.Aggregates.{User}
   alias Naboo.Accounts.Commands.{
+    ChangeEmail,
     ChangePassword,
     RegisterUser,
     ResetPassword,
@@ -21,6 +22,7 @@ defmodule Naboo.Accounts.Aggregates.User do
   }
   alias Naboo.Accounts.Events.{
     UserActiveChanged,
+    UserEmailChanged,
     UserEmailVerifiedChanged,
     UserFullNameChanged,
     UserImageUrlChanged,
@@ -78,6 +80,13 @@ defmodule Naboo.Accounts.Aggregates.User do
     }
   end
 
+  def execute(%User{} = _user, %ChangeEmail{} = command) do
+    %UserEmailChanged{
+      uuid: command.uuid,
+      email: command.email
+    }
+  end
+
 
   # ################################################################################
   # Apply Events
@@ -123,6 +132,9 @@ defmodule Naboo.Accounts.Aggregates.User do
     %User{user | hashed_password: hashed_password}
   end
 
+  def apply(%User{} = user, %UserEmailChanged{email: email}) do
+    %User{user | email: email}
+  end
 
 
   # ################################################################################

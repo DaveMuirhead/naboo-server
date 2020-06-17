@@ -16,10 +16,10 @@ defmodule NabooWeb.PasswordController do
   # { "email": "", "reset_form_url": "" }
   #
   # Success Response
-  # Status 202 (Accepted)
+  #  Status 202 (Accepted)
   #
   # Error Responses
-  # Status 422 (Unprocessable Entity) on validation error
+  #  422 (Unprocessable Entity) on validation error
   def start_password_reset(conn, %{"email" => email, "reset_form_url" => reset_form_url}) do
     token = Token.generate_verification_token(email)
     reset_link = reset_form_url <> "/" <> token
@@ -36,7 +36,7 @@ defmodule NabooWeb.PasswordController do
   # {"password":""}
   #
   # Success Response
-  # 200 (OK) with no content
+  #  200 (OK) with no content
   #
   # Error Responses
   #  401 (Unauthorized) if token is expired

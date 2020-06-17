@@ -43,5 +43,7 @@ defmodule Naboo.Auth.Authenticator do
     end
   end
 
-
+  def check_password(nil, password) do
+    {:error, :unauthenticated}
+  end
 end

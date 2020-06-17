@@ -1,6 +1,6 @@
 defmodule Naboo.Accounts do
 
-  alias Naboo.Accounts.Commands.{ChangePassword, RegisterUser, ResetPassword, UpdateUser}
+  alias Naboo.Accounts.Commands.{ChangeEmail, ChangePassword, RegisterUser, ResetPassword, UpdateUser}
   alias Naboo.Accounts.Projections.{User}
   alias Naboo.Accounts.Queries.{UserByEmail, UserByUuid}
   alias Naboo.Repo
@@ -45,6 +45,16 @@ defmodule Naboo.Accounts do
       Map.merge(attrs, %{uuid: uuid, password: old_password})
       |> ChangePassword.new()
       |> ChangePassword.hash_password()
+    with :ok <- App.dispatch(command, consistency: :strong) do
+      get(User, uuid)
+    end
+  end
+
+  def change_email(%User{uuid: uuid} = _user, %{"new_email" => new_email} = attrs \\ %{}) do
+    command =
+      %{"uuid" => uuid, "email" => new_email}
+      |> ChangeEmail.new()
+      |> ChangeEmail.downcase_email()
     with :ok <- App.dispatch(command, consistency: :strong) do
       get(User, uuid)
     end

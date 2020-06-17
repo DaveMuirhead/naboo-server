@@ -5,6 +5,7 @@ defmodule NabooWeb.RegistrationController do
   alias Naboo.Accounts.Projections.User
   alias Naboo.Auth.Guardian
   alias Naboo.Auth.Session
+  alias Naboo.Auth.VerificationCode
   alias NabooWeb.Email
   alias NabooWeb.Mailer
   alias NabooWeb.Router.Helpers, as: Routes
@@ -35,7 +36,7 @@ defmodule NabooWeb.RegistrationController do
   # Status 422 (Unprocessable Entity) on validation error
   def start_registration(conn, params) do
     with {:ok, user} <- Accounts.register_user(params) do
-      code = verification_code()
+      code = VerificationCode.next()
       conn
       |> request_email_verification(user, code)
       |> assign_verification_token(user, code)
@@ -66,7 +67,7 @@ defmodule NabooWeb.RegistrationController do
           |> put_status(:bad_request)
           |> render("empty.json")
         false ->
-          code = verification_code()
+          code = VerificationCode.next()
           conn
           |> request_email_verification(user, code)
           |> assign_verification_token(user, code)
@@ -126,14 +127,8 @@ defmodule NabooWeb.RegistrationController do
     |> assign(:secret, token)
   end
 
-  defp verification_code()  do
-    # generate verification code between 100000 and 999999 (ensure 6 chars)
-    :random.seed(:erlang.now())
-    :random.uniform(899999) + 100000
-  end
-
-  defp build_token_data(user_uuid, code) do
-    user_uuid <> ":" <> code
+  defp build_token_data(uuid, code) do
+    uuid <> ":" <> code
   end
 
 end

@@ -6,6 +6,7 @@ defmodule Naboo.Accounts.Projectors.User do
 
   alias Naboo.Accounts.Events.{
     UserActiveChanged,
+    UserEmailChanged,
     UserEmailVerifiedChanged,
     UserFullNameChanged,
     UserImageUrlChanged,
@@ -63,12 +64,17 @@ defmodule Naboo.Accounts.Projectors.User do
     update_user(multi, uuid, hashed_password: hashed_password)
   end)
 
-  defp update_user(multi, user_uuid, changes) do
-    Ecto.Multi.update_all(multi, :user, user_query(user_uuid), set: changes)
+  project(%UserEmailChanged{uuid: uuid, email: email}, fn multi ->
+    update_user(multi, uuid, email: email)
+  end)
+
+
+  defp update_user(multi, uuid, changes) do
+    Ecto.Multi.update_all(multi, :user, user_query(uuid), set: changes)
   end
 
-  defp user_query(user_uuid) do
-    from(u in User, where: u.uuid == ^user_uuid)
+  defp user_query(uuid) do
+    from(u in User, where: u.uuid == ^uuid)
   end
 
 end

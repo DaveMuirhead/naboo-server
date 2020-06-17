@@ -1,4 +1,4 @@
-<h1>Welcome to Naboo!</h1>
+*<h1>Welcome to Naboo!</h1>
 <p>Enter this code to verify your new email address and complete your email address update for Naboo:</p>
 <p><strong><%= @code %></strong></p>
 <p>This code will expire in 10 minutes.</p>
