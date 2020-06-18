@@ -16,6 +16,7 @@ defmodule NabooWeb.FallbackController do
 
   def call(conn, {:error, :validation_failure, %{} = errors}) do
     IO.puts("FallbackController.call(conn, {:error, :validation_failure, %{} = errors}) was executed")
+    IO.inspect(errors)
     conn
     |> put_status(:unprocessable_entity)
     |> put_view(NabooWeb.ValidationView)

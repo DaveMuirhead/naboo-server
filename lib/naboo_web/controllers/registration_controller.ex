@@ -100,10 +100,10 @@ defmodule NabooWeb.RegistrationController do
         conn
         |> Guardian.Plug.sign_in(user)
         |> Session.put_token_cookie()
-        |> assign(:user, user)
         |> put_status(:ok)
         |> put_resp_header("Location", Routes.user_path(NabooWeb.Endpoint, :profile, user))
-        |> render(NabooWeb.UserView, "user.json")
+        |> put_view(NabooWeb.UserView)
+        |> render("user.json", user: user)
       end
     end
   end
