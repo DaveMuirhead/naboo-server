@@ -40,9 +40,8 @@ defmodule NabooWeb.RegistrationController do
       conn
       |> request_email_verification(user, code)
       |> assign_verification_token(user, code)
-      |> assign(:user, user)
       |> put_status(:created)
-      |> render("registration.json")
+      |> render("registration.json", user: user)
     end
   end
 
@@ -71,9 +70,8 @@ defmodule NabooWeb.RegistrationController do
           conn
           |> request_email_verification(user, code)
           |> assign_verification_token(user, code)
-          |> assign(:user, user)
           |> put_status(:accepted)
-          |> render("registration.json")
+          |> render("registration.json", user: user)
       end
     end
   end
