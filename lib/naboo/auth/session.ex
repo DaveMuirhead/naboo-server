@@ -30,7 +30,8 @@ defmodule Naboo.Auth.Session do
       http_only: true,                    # cookie not accessible outside of HTTP
       #secure: true,                       # cookie may only sent over HTTPS
       encrypt: true,                      # encrypt the cookie
-      same_site: true
+      #same_site: true
+      #extra: "SameSite=None"
     ]
   end
 
