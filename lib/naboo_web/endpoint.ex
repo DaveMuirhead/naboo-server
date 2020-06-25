@@ -45,7 +45,7 @@ defmodule NabooWeb.Endpoint do
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 
-  plug CORSPlug
+  plug CORSPlug, origin: ["http://localhost:3000", "http://10.0.0.217:3000"], expose: [ "Set-Cookie"]
 
   plug Plug.MethodOverride
   plug Plug.Head
