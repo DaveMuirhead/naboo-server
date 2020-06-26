@@ -21,13 +21,16 @@ defmodule NabooWeb.PasswordController do
   # Error Responses
   #  422 (Unprocessable Entity) on validation error
   def start_password_reset(conn, %{"email" => email, "reset_form_url" => reset_form_url}) do
-    token = Token.generate_verification_token(email)
-    reset_link = reset_form_url <> "/" <> token
-    Email.reset_password(conn, email, reset_link)
-    |> Mailer.deliver_later()
+    user = Accounts.user_by_email(email)
+    if (user != nil and user.active) do
+      token = Token.generate_verification_token(email)
+      reset_link = reset_form_url <> "?token=" <> token
+      Email.reset_password(conn, email, reset_link)
+      |> Mailer.deliver_later()
+    end
     conn
-      |> put_status(:accepted)
-      |> render("accepted.json")
+    |> put_status(:accepted)
+    |> render("accepted.json")
   end
 
   # PATCH /password-resets/:secret
