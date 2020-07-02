@@ -13,13 +13,13 @@ defmodule Naboo.Accounts do
 
   def start_registration(attrs \\ %{}) do
     %User{}
-    |> User.registration_changeset(attrs)
+    |> User.start_registration_changeset(attrs)
     |> Repo.insert()
   end
 
   def complete_registration(%User{uuid: uuid} = user, attrs \\ %{}) do
     user
-    |> User.confirm_changeset(attrs)
+    |> User.complete_registration_changeset(attrs)
     |> Repo.update()
   end
 

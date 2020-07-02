@@ -30,7 +30,7 @@ defmodule Naboo.Accounts.User do
   end
 
   @doc false
-  def registration_changeset(%__MODULE__{} = user, attrs) do
+  def start_registration_changeset(%__MODULE__{} = user, attrs) do
     user
     |> cast(attrs, [:account_type, :email, :full_name, :password])
 #    |> put_uuid()
@@ -42,7 +42,7 @@ defmodule Naboo.Accounts.User do
 
 #  https://github.com/riverrun/phauxth-example/blob/master/lib/forks_the_egg_sample/accounts/user.ex
 
-  def confirm_changeset(%__MODULE__{} = user, %{uuid: uuid, active: active, email_verified: email_verified} = attrs) do
+  def complete_registration_changeset(%__MODULE__{} = user, %{uuid: uuid, active: active, email_verified: email_verified} = attrs) do
     change(user, %{uuid: uuid, active: active, email_verified: email_verified})
   end
 
