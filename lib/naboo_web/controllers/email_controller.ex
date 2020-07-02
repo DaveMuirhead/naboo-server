@@ -66,7 +66,7 @@ defmodule NabooWeb.EmailController do
     with user <- Guardian.Plug.current_resource(conn) do
       token_data = build_token_data(user.uuid, new_email, code)
       with {:ok, :matched} <- Token.check_verification_token(token, token_data),
-           {:ok, %User{} = user} <- Accounts.change_email(user, params)
+           {:ok, %User{} = user} <- Accounts.update_email(user, %{email: new_email})
       do
         conn
         |> put_status(:ok)

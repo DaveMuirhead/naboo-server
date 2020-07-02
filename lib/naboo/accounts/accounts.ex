@@ -1,7 +1,5 @@
 defmodule Naboo.Accounts do
 
-  alias Naboo.Accounts.Commands.{ChangeEmail, ChangePassword, RegisterUser, ResetPassword, UpdateUser}
-  alias Naboo.Accounts.Projections.{User}
   alias Naboo.Accounts.Queries.{UserByEmail, UserByUuid}
   alias Naboo.Accounts.User
   alias Naboo.Repo
@@ -17,26 +15,28 @@ defmodule Naboo.Accounts do
     |> Repo.insert()
   end
 
-  def complete_registration(%User{uuid: uuid} = user, attrs \\ %{}) do
+  def complete_registration(%User{} = user, attrs \\ %{}) do
     user
     |> User.complete_registration_changeset(attrs)
     |> Repo.update()
   end
 
-  def update_user(%User{uuid: uuid} = user, attrs \\ %{}) do
-    {:error, "not implemented"}
+  def update_user(%User{} = user, attrs \\ %{}) do
+    user
+    |> User.update_changeset(attrs)
+    |> Repo.update()
   end
 
-  def reset_password(%{"uuid" => uuid} = attrs \\ %{}) do
-    {:error, "not implemented"}
+  def update_password(%User{} = user, %{password: password} = attrs \\ %{}) do
+    user
+    |> User.password_update_changeset(attrs)
+    |> Repo.update()
   end
 
-  def change_password(%User{uuid: uuid} = user, %{"old_password" => old_password, "new_password" => new_password} = attrs \\ %{}) do
-    {:error, "not implemented"}
-  end
-
-  def change_email(%User{uuid: uuid} = _user, %{"new_email" => new_email} = attrs \\ %{}) do
-    {:error, "not implemented"}
+  def update_email(%User{} = user, %{email: email} = attrs \\ %{}) do
+    user
+    |> User.email_update_changeset(attrs)
+    |> Repo.update()
   end
 
 

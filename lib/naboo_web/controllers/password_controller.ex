@@ -3,6 +3,7 @@ defmodule NabooWeb.PasswordController do
 
   alias Naboo.Accounts
   alias Naboo.Accounts.User
+  alias Naboo.Auth.Authenticator
   alias NabooWeb.Email
   alias NabooWeb.Mailer
   alias NabooWeb.Token
@@ -45,8 +46,8 @@ defmodule NabooWeb.PasswordController do
   #  401 (Unauthorized) if token is expired
   def complete_password_reset(conn, %{"password" => password, "secret" => secret} = attrs) do
     with email <- Token.decrypt_token(secret),
-         %User{uuid: uuid} = Accounts.user_by_email(email),
-         {:ok, _user} <- Accounts.reset_password(%{"uuid" => uuid, "password" => password})
+         %User{} = user = Accounts.user_by_email(email),
+         {:ok, _user} <- Accounts.update_password(user, %{password: password})
     do
       conn
         |> send_resp(200, "")
@@ -65,22 +66,11 @@ defmodule NabooWeb.PasswordController do
   #  422 (Unprocessable Entity) if any validation error occurs
   def change_password(conn, %{"old_password" => old_password, "new_password" => new_password} = attrs) do
     with user <- Guardian.Plug.current_resource(conn),
-         {:ok, user} <- Accounts.change_password(user, attrs)
+         {:ok, user} <- Authenticator.check_password(user, old_password),
+         {:ok, user} <- Accounts.update_password(user, %{password: new_password})
     do
       conn
       |> send_resp(200, "")
-    else
-      {:error, :validation_failure, %{password: [:unuthenticated]}} ->
-        conn
-        |> send_resp(401, "")
-      {:error, :validation_failure, errors} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> put_view(NabooWeb.ValidationView)
-        |> render("error.json", errors: errors)
-      _ ->
-        conn
-        |> send_resp(422, "")
     end
   end
 

@@ -8,6 +8,7 @@ defmodule Naboo.Accounts.User do
   @primary_key {:uuid, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   @timestamps_opts [type: :utc_datetime_usec]
+  @derive {Phoenix.Param, key: :uuid}
 
   schema "users" do
     field :account_type, :string
@@ -23,45 +24,39 @@ defmodule Naboo.Accounts.User do
     timestamps()
   end
 
-  def changeset(%__MODULE__{} = user, attrs) do
+  def start_registration_changeset(%__MODULE__{} = user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:email])
-    |> validate_required([:email])
-  end
-
-  @doc false
-  def start_registration_changeset(%__MODULE__{} = user, attrs) do
-    user
-    |> cast(attrs, [:account_type, :email, :full_name, :password])
-#    |> put_uuid()
-    |> put_pass_hash()
-    |> validate_required([:account_type, :email, :full_name, :password_hash, :password, :uuid])
+    |> cast(attrs, [:account_type, :email, :full_name, :password, :picture, :nickname])
+    |> validate_required([:account_type, :email, :password])
     |> validate_email()
     |> validate_password()
+    |> validate_picture()
+    |> put_pass_hash()
   end
-
-#  https://github.com/riverrun/phauxth-example/blob/master/lib/forks_the_egg_sample/accounts/user.ex
 
   def complete_registration_changeset(%__MODULE__{} = user, %{uuid: uuid, active: active, email_verified: email_verified} = attrs) do
     change(user, %{uuid: uuid, active: active, email_verified: email_verified})
   end
 
-#  def password_reset_changeset(%__MODULE__{} = user, reset_sent_at) do
-#    change(user, %{reset_sent_at: reset_sent_at})
-#  end
+  def update_changeset(%__MODULE__{} = user, attrs \\ %{}) do
+    user
+    |> cast(attrs, [:full_name, :picture, :nickname])
+    |> validate_picture()
+  end
 
-#  def update_password_changeset(%__MODULE__{} = user, attrs) do
-#    user
-#    |> cast(attrs, [:password])
-#    |> validate_required([:password])
-#    |> validate_password(:password)
-#    |> put_pass_hash()
-#    |> change(%{reset_sent_at: nil})
-#  end
+  def password_update_changeset(%__MODULE__{} = user, attrs \\ %{}) do
+    user
+    |> cast(attrs, [:password])
+    |> validate_required([:password])
+    |> validate_password()
+    |> put_pass_hash()
+  end
 
-
-  defp put_uuid(changeset) do
-    change(changeset, %{uuid: UUID.uuid4()})
+  def email_update_changeset(%__MODULE__{} = user, attrs \\ %{}) do
+    user
+    |> cast(attrs, [:email])
+    |> validate_required([:email])
+    |> validate_email()
   end
 
   defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
@@ -71,14 +66,19 @@ defmodule Naboo.Accounts.User do
   defp put_pass_hash(changeset), do: changeset
 
   defp validate_password(changeset) do
-    changeset
-    |> validate_password_length()
-    |> validate_password_strength()
+    password_change = get_change(changeset, :password)
+    if (password_change != nil ) do
+      changeset
+      |> validate_password_length()
+      |> validate_password_strength()
+    else
+      changeset
+    end
   end
 
   defp validate_password_length(changeset) do
-    password = get_field(changeset, :password)
-    if String.length(password) >= 8 do
+    password_change = get_change(changeset, :password)
+    if String.length(password_change) >= 8 do
       changeset
     else
       add_error(changeset, :password, "must be 8 characters or longer")
@@ -86,11 +86,11 @@ defmodule Naboo.Accounts.User do
   end
 
   defp validate_password_strength(changeset) do
-    password = get_field(changeset, :password)
-    with true <- String.match?(password, ~r/[[:lower:]]+/),
-         true <- String.match?(password, ~r/[[:upper:]]+/),
-         true <- String.match?(password, ~r/[[:digit:]]+/),
-         true <- String.match?(password, ~r/[[:punct:]]+/)
+    password_change = get_change(changeset, :password)
+    with true <- String.match?(password_change, ~r/[[:lower:]]+/),
+         true <- String.match?(password_change, ~r/[[:upper:]]+/),
+         true <- String.match?(password_change, ~r/[[:digit:]]+/),
+         true <- String.match?(password_change, ~r/[[:punct:]]+/)
     do
       changeset
     else
@@ -99,31 +99,50 @@ defmodule Naboo.Accounts.User do
   end
 
   defp validate_email(changeset) do
-    changeset
-    |> validate_email_format()
-    |> validate_email_available()
+    email_change = get_change(changeset, :email)
+    if (email_change != nil) do
+      changeset
+      |> validate_email_format()
+      |> validate_email_available()
+    else
+      changeset
+    end
   end
 
   defp validate_email_format(changeset) do
-    email = get_field(changeset, :email)
-    case String.match?(email, ~r/\S+@\S+\.\S+/) do
+    email_change = get_change(changeset, :email)
+    case String.match?(email_change, ~r/\S+@\S+\.\S+/) do
       true -> changeset
-      false -> add_error(changeset, :email, "not a valid email; expecting somebody@someco.tld")
+      false -> add_error(changeset, :email, "not a valid email address; expecting format local-part@domain.tld")
     end
   end
 
   defp validate_email_available(changeset) do
-    email = get_field(changeset, :email)
-    case email_registered?(email) do
+    email_change = get_change(changeset, :email)
+    case email_registered?(email_change) do
       true -> add_error(changeset, :email, "is already registered")
       false -> changeset
     end
   end
 
-  def email_registered?(email) do
-    case Accounts.user_by_email(email) do
-      %User{email: ^email} -> true
+  def email_registered?(email_change) do
+    case Accounts.user_by_email(email_change) do
+      %User{email: ^email_change} -> true
       nil -> false
+    end
+  end
+
+  defp validate_picture(changeset) do
+    picture_change = get_change(changeset, :picture)
+    if (picture_change != nil) do
+      case URI.parse(picture_change) do
+        %URI{scheme: nil} -> add_error(changeset, :picture, "must have scheme")
+        %URI{host: nil} -> add_error(changeset, :email, "must have host")
+        %URI{path: nil} -> add_error(changeset, :email, "must have path")
+        uri -> changeset
+      end
+    else
+      changeset
     end
   end
 

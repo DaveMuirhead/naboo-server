@@ -6,53 +6,40 @@ defmodule NabooWeb.FallbackController do
   """
   use NabooWeb, :controller
 
-  def call(conn, {:error, :aggregate_execution_failed}) do
-    IO.puts("FallbackController.call(conn, {:error, :aggregate_execution_failed}) was executed")
+  def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
+    IO.puts("FallbackController.call(conn, {:error, %Ecto.Changeset{} = changeset}) was executed")
+    IO.inspect(changeset)
     conn
     |> put_status(:unprocessable_entity)
-    |> put_view(NabooWeb.ValidationView)
-    |> render("error.json", errors: %{})
-  end
-
-  def call(conn, {:error, :validation_failure, %{} = errors}) do
-    IO.puts("FallbackController.call(conn, {:error, :validation_failure, %{} = errors}) was executed")
-    IO.inspect(errors)
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(NabooWeb.ValidationView)
-    |> render("error.json", errors: errors)
+    |> render(NabooWeb.ChangesetView, "error.json", changeset: changeset)
   end
 
   def call(conn, {:error, :not_found}) do
     IO.puts("FallbackController.call(conn, {:error, :not_found}) was executed")
     conn
     |> put_status(:not_found)
-    |> put_view(NabooWeb.ErrorView)
-    |> render(:"404")
+    |> render(NabooWeb.ErrorView, :"404")
   end
 
   def call(conn, {:error, :expired}) do
     IO.puts("FallbackController.call(conn, {:error, :expired) was executed")
     conn
     |> put_status(:unauthorized)
-    |> put_view(NabooWeb.ErrorView)
-    |> render(:"401")
+    |> render(NabooWeb.ErrorView, :"401")
   end
 
   def call(conn, {:error, :unauthorized}) do
     IO.puts("FallbackController.call(conn, {:error, :unauthorized}) was executed")
     conn
     |> put_status(:unauthorized)
-    |> put_view(NabooWeb.ErrorView)
-    |> render(:"401")
+    |> render(NabooWeb.ErrorView, :"401")
   end
 
   def call(conn, {:error, :internal_server_error}) do
     IO.puts("FallbackController.call(conn, {:error, :internal_server_error}) was executed")
     conn
     |> put_status(:internal_server_error)
-    |> put_view(NabooWeb.ErrorView)
-    |> render(:"500")
+    |> render(NabooWeb.ErrorView, :"500")
   end
 
   def call(conn, other) do
@@ -60,8 +47,7 @@ defmodule NabooWeb.FallbackController do
     IO.inspect(other)
     conn
     |> put_status(:internal_server_error)
-    |> put_view(NabooWeb.ErrorView)
-    |> render(:"500")
+    |> render(NabooWeb.ErrorView, :"500")
   end
 
 end
