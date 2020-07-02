@@ -21,10 +21,8 @@ defmodule Naboo.MixProject do
     [
       mod: {Naboo.Application, []},
       extra_applications: [
-        :eventstore,
         :guardian,
         :os_mon,
-#        :ueberauth_auth0
       ]
     ]
   end
@@ -40,6 +38,10 @@ defmodule Naboo.MixProject do
     [
       # Phoenix core
       {:phoenix, "~> 1.4.17"},
+      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix_ecto, "~> 4.1"},
+      {:ecto_sql, "~> 3.4"},
+      {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.1"},
       {:plug_cowboy, "~> 2.0"},
@@ -49,20 +51,10 @@ defmodule Naboo.MixProject do
       {:telemetry_metrics, "~> 0.4"},
       {:telemetry_poller, "~> 0.4"},
 
-      # Persistence / CQRS+ES
-      {:phoenix_ecto, "~> 4.1"},
-      {:ecto_sql, "~> 3.4"},
-      {:postgrex, ">= 0.0.0"},
-      {:commanded, "~> 1.0.1"},
-      {:commanded_eventstore_adapter, "~> 1.0"},
-      {:commanded_ecto_projections, "~> 1.0"},
-      {:eventstore, "~> 1.0.2"},
-      {:exconstructor, "~> 1.1"},
-      {:vex, "~> 0.8"},
-
       # Security
-      {:bcrypt_elixir, "~> 1.0"},
-      {:comeonin, "~> 4.0"},
+#      {:bcrypt_elixir, "~> 1.0"}, #remove
+      {:comeonin, "~> 5.0"},
+      {:argon2_elixir, "~> 2.0"},
       {:guardian, "~> 2.0"},
       {:cors_plug, "~> 2.0"},
 
@@ -90,7 +82,6 @@ defmodule Naboo.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      "event_store.init": ["event_store.drop", "event_store.create", "event_store.init"],
       "ecto.init": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       reset: ["event_store.init", "ecto.init"],
       test: ["reset", "test"]

@@ -3,12 +3,17 @@ defmodule Naboo.Auth.Authenticator do
   Basic authentication using the bcrypt password hashing function.
   """
 
-  alias Comeonin.Bcrypt
+  alias Argon2
   alias Naboo.Accounts
-  alias Naboo.Accounts.Projections.User
+  alias Naboo.Accounts.User
 
-  def hash_password(password), do: Bcrypt.hashpwsalt(password)
-  def validate_password(password, hash), do: Bcrypt.checkpw(password, hash)
+  def hash_password(password) do
+    Argon2.hash_pwd_salt(password)
+  end
+
+  def validate_password(password, hash) do
+    Argon2.verify_pass(password, hash)
+  end
 
   def authenticate(email, password) do
     with {:ok, user} <- user_by_email(email) do
@@ -36,8 +41,8 @@ defmodule Naboo.Auth.Authenticator do
     end
   end
 
-  def check_password(%User{hashed_password: hashed_password} = user, password) do
-    case validate_password(password, hashed_password) do
+  def check_password(%User{password_hash: password_hash} = user, password) do
+    case validate_password(password, password_hash) do
       true -> {:ok, user}
       _ -> {:error, :unauthenticated}
     end

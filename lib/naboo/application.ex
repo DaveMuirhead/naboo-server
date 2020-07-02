@@ -7,9 +7,6 @@ defmodule Naboo.Application do
 
   def start(_type, _args) do
     children = [
-      # Commanded application
-      Naboo.App,
-
       # Start the Ecto repository
       Naboo.Repo,
 
@@ -18,12 +15,6 @@ defmodule Naboo.Application do
 
       # Start the Endpoint (http/https)
       NabooWeb.Endpoint,
-
-      # Accounts supervisor
-      Naboo.Accounts.Supervisor,
-
-      # Uniqueness registry
-      Naboo.Support.Unique
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

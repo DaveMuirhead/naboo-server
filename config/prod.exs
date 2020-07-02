@@ -54,22 +54,11 @@ config :logger, level: :info
 # and configuration from environment variables.
 import_config "prod.secret.exs"
 
-# Configure the event store database
-config :naboo, Naboo.EventStore,
-  serializer: Commanded.Serialization.JsonSerializer,
-  username: "naboo",
-  password: "naboo",
-  database: "naboo_eventstore_prod",
-  hostname: "localhost",
-  port: 5434,
-  pool_size: 10
-
-# Configure the read store database
 config :naboo, Naboo.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "naboo",
   password: "naboo",
-  database: "naboo_readstore_prod",
+  database: "naboo_prod",
   hostname: "localhost",
   port: 5434,
   pool_size: 10

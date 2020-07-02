@@ -9,25 +9,13 @@ config :naboo, NabooWeb.Endpoint,
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-# Configure the event store database
-config :naboo, Naboo.EventStore,
-  serializer: Commanded.Serialization.JsonSerializer,
-  username: "naboo",
-  password: "naboo",
-  database: "naboo_eventstore_test",
-  hostname: "localhost",
-  port: 5434,
-  pool_size: 10
-
-# Configure the read store database
 config :naboo, Naboo.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "naboo",
   password: "naboo",
-  database: "naboo_readstore_test",
+  database: "naboo_test",
   hostname: "localhost",
   port: 5434,
-#  pool: Ecto.Adapters.SQL.Sandbox,  # see data_case.exs
   pool_size: 10
 
-config :bcrypt_elixir, :log_rounds, 4
+config :argon2_elixir, t_cost: 1, m_cost: 8

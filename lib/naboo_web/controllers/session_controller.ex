@@ -2,7 +2,7 @@ defmodule NabooWeb.SessionController do
   use NabooWeb, :controller
 
   alias Naboo.Accounts
-  alias Naboo.Accounts.Projections.User
+  alias Naboo.Accounts.User
   alias Naboo.Auth.Authenticator
   alias Naboo.Auth.Guardian
   alias Naboo.Auth.Session

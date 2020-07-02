@@ -2,7 +2,7 @@ defmodule NabooWeb.RegistrationController do
   use NabooWeb, :controller
 
   alias Naboo.Accounts
-  alias Naboo.Accounts.Projections.User
+  alias Naboo.Accounts.User
   alias Naboo.Auth.Guardian
   alias Naboo.Auth.Session
   alias Naboo.Auth.VerificationCode
@@ -42,6 +42,11 @@ defmodule NabooWeb.RegistrationController do
       |> assign_verification_token(user, code)
       |> put_status(:created)
       |> render("registration.json", user: user)
+    else
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(NabooWeb.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -94,7 +99,7 @@ defmodule NabooWeb.RegistrationController do
          user = Accounts.user_by_uuid(uuid)
     do
       updates = %{uuid: user.uuid, active: true, email_verified: true}
-      with {:ok, %User{} = user} <- Accounts.update_user(user, updates) do
+      with {:ok, %User{} = user} <- Accounts.confirm_user(user, updates) do
         conn
         |> Guardian.Plug.sign_in(user)
         |> Session.put_token_cookie()

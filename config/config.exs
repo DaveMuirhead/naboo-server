@@ -8,16 +8,7 @@
 use Mix.Config
 
 config :naboo,
-  ecto_repos: [Naboo.Repo],
-  event_stores: [Naboo.EventStore]
-
-config :naboo, Naboo.App,
-  event_store: [
-    adapter: Commanded.EventStore.Adapters.EventStore,
-    event_store: Naboo.EventStore
-  ],
-  pub_sub: :local,
-  registry: :local
+  ecto_repos: [Naboo.Repo]
 
 # Configures the endpoint
 config :naboo, NabooWeb.Endpoint,
@@ -32,17 +23,6 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
-config :commanded,
-  event_store_adapter: Commanded.EventStore.Adapters.EventStore
-
-config :commanded_ecto_projections,
-  repo: Naboo.Repo
-
-config :vex,
-  sources: [
-    Naboo.Support.Validators,
-    Vex.Validators
-  ]
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 

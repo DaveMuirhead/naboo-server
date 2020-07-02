@@ -1,7 +1,7 @@
 defmodule Naboo.Accounts.Queries.UserByEmail do
   import Ecto.Query
 
-  alias Naboo.Accounts.Projections.User
+  alias Naboo.Accounts.User
 
   def new(email) do
     from u in User,

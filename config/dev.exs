@@ -47,22 +47,11 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
-# Configure the event store database
-config :naboo, Naboo.EventStore,
-  serializer: Commanded.Serialization.JsonSerializer,
-  username: "naboo",
-  password: "naboo",
-  database: "naboo_eventstore_dev",
-  hostname: "localhost",
-  port: 5434,
-  pool_size: 10
-
-# Configure the read store database
 config :naboo, Naboo.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "naboo",
   password: "naboo",
-  database: "naboo_readstore_dev",
+  database: "naboo_dev",
   hostname: "localhost",
   port: 5434,
   pool_size: 10

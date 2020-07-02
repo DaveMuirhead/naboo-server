@@ -1,7 +1,7 @@
 defmodule Naboo.Auth.Session do
 
   import Plug.Conn
-  alias Naboo.Accounts.Projections.User
+  alias Naboo.Accounts.User
   alias Naboo.Auth.Session
 
   def access_token_cookie_key, do: "naboo_access"

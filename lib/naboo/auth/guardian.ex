@@ -6,7 +6,7 @@ defmodule Naboo.Auth.Guardian do
   use Guardian, otp_app: :naboo
 
   alias Naboo.Accounts
-  alias Naboo.Accounts.Projections.User
+  alias Naboo.Accounts.User
 
   def subject_for_token(%User{} = user, _claims) do
     {:ok, user.uuid}

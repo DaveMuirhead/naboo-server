@@ -2,7 +2,7 @@ defmodule NabooWeb.EmailController do
   use NabooWeb, :controller
 
   alias Naboo.Accounts
-  alias Naboo.Accounts.Projections.User
+  alias Naboo.Accounts.User
   alias Naboo.Auth.VerificationCode
   alias NabooWeb.Email
   alias NabooWeb.Mailer
