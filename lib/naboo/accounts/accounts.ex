@@ -11,13 +11,13 @@ defmodule Naboo.Accounts do
   # Commands
   # ################################################################################
 
-  def register_user(attrs \\ %{}) do
+  def start_registration(attrs \\ %{}) do
     %User{}
     |> User.registration_changeset(attrs)
     |> Repo.insert()
   end
 
-  def confirm_user(%User{uuid: uuid} = user, attrs \\ %{}) do
+  def complete_registration(%User{uuid: uuid} = user, attrs \\ %{}) do
     user
     |> User.confirm_changeset(attrs)
     |> Repo.update()
@@ -65,7 +65,7 @@ defmodule Naboo.Accounts do
   defp get(schema, uuid) do
     case Repo.get(schema, uuid) do
       nil -> {:error, :not_found}
-      projection -> {:ok, projection}
+      found -> {:ok, found}
     end
   end
 

@@ -35,7 +35,7 @@ defmodule NabooWeb.RegistrationController do
   # Error Responses
   # Status 422 (Unprocessable Entity) on validation error
   def start_registration(conn, params) do
-    with {:ok, user} <- Accounts.register_user(params) do
+    with {:ok, user} <- Accounts.start_registration(params) do
       code = VerificationCode.next()
       conn
       |> request_email_verification(user, code)
@@ -99,7 +99,7 @@ defmodule NabooWeb.RegistrationController do
          user = Accounts.user_by_uuid(uuid)
     do
       updates = %{uuid: user.uuid, active: true, email_verified: true}
-      with {:ok, %User{} = user} <- Accounts.confirm_user(user, updates) do
+      with {:ok, %User{} = user} <- Accounts.complete_registration(user, updates) do
         conn
         |> Guardian.Plug.sign_in(user)
         |> Session.put_token_cookie()
