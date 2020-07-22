@@ -12,7 +12,7 @@ config :naboo,
 
 # Configures the endpoint
 config :naboo, NabooWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "dave.brsg.io"],
   secret_key_base: "M+VBaBKapyHthgDpVI0jDzaUfruiVKnGnPnGH6zXe3+WVD69p/Z6q+ayLzEgpE96",
   render_errors: [view: NabooWeb.ErrorView, format: "json", accepts: ~w(json), layout: false],
   pubsub_server: Naboo.PubSub,
