@@ -54,7 +54,7 @@ defmodule NabooWeb.PasswordController do
     end
   end
 
-  # PATCH /users/:uuid/password
+  # PUT /users/:uuid/password-changes
   #
   # Request
   # {"old_password:"", "new_password":""}

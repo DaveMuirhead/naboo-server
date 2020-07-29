@@ -28,6 +28,13 @@ defmodule NabooWeb.FallbackController do
     |> render(NabooWeb.ErrorView, :"401")
   end
 
+  def call(conn, {:error, :unauthenticated}) do
+    IO.puts("FallbackController.call(conn, {:error, :unauthenticated}) was executed")
+    conn
+    |> put_status(:unauthorized)
+    |> render(NabooWeb.ErrorView, :"401")
+  end
+
   def call(conn, {:error, :unauthorized}) do
     IO.puts("FallbackController.call(conn, {:error, :unauthorized}) was executed")
     conn

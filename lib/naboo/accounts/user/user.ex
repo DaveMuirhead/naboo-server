@@ -16,17 +16,18 @@ defmodule Naboo.Accounts.User do
     field :email, :string, unique: true
     field :email_verified, :boolean, default: false
     field :full_name, :string
+    field :nickname, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    field :phone1, :string
     field :picture, :string
-    field :nickname, :string
 
     timestamps()
   end
 
   def start_registration_changeset(%__MODULE__{} = user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:account_type, :email, :full_name, :password, :picture, :nickname])
+    |> cast(attrs, [:account_type, :email, :full_name, :password, :picture, :nickname, :phone1])
     |> validate_required([:account_type, :email, :password])
     |> validate_email()
     |> validate_password()
@@ -40,7 +41,7 @@ defmodule Naboo.Accounts.User do
 
   def update_changeset(%__MODULE__{} = user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:full_name, :picture, :nickname])
+    |> cast(attrs, [:full_name, :picture, :nickname, :phone1])
     |> validate_picture()
   end
 
@@ -137,8 +138,8 @@ defmodule Naboo.Accounts.User do
     if (picture_change != nil) do
       case URI.parse(picture_change) do
         %URI{scheme: nil} -> add_error(changeset, :picture, "must have scheme")
-        %URI{host: nil} -> add_error(changeset, :email, "must have host")
-        %URI{path: nil} -> add_error(changeset, :email, "must have path")
+        %URI{host: nil} -> add_error(changeset, :picture, "must have host")
+        %URI{path: nil} -> add_error(changeset, :picture, "must have path")
         uri -> changeset
       end
     else
