@@ -32,6 +32,12 @@ import_config "bamboo.exs"
 # Import configuration for Guardian
 import_config "guardian.exs"
 
+# Import configuration for Arc
+import_config "arc.exs"
+
+# Import configuration for ExAws
+#import_config "exaws.exs"
+
 # Import configuration for Ueberauth using local identify management
 #import_config "ueberauth-local.exs"
 

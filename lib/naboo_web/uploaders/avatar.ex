@@ -1,12 +1,15 @@
-defmodule NabooWeb.Avatar do
+defmodule Naboo.Avatar do
   use Arc.Definition
   def __storage, do: Arc.Storage.Local
 
-  @versions [:original, :thumb]
-  @extension_whitelist ~w(.jpg .jpeg .gif .png)
-
   # Include ecto support (requires package arc_ecto installed):
   # use Arc.Ecto.Definition
+
+  @versions [:original]
+
+  # To add a thumbnail version:
+  @versions [:original, :thumb]
+  @extension_whitelist ~w(.jpg .jpeg .gif .png)
 
   # Override the bucket on a per definition basis:
   # def bucket do
@@ -31,13 +34,13 @@ defmodule NabooWeb.Avatar do
 
   # Override the storage directory:
   def storage_dir(version, {file, scope}) do
-   "uploads/avatars/#{scope.id}"
+    "uploads/avatars/#{scope.uuid}"
   end
 
   # Provide a default URL if there hasn't been a file uploaded
-  def default_url(version \\ nil, scope \\ nil) do
-    NabooWeb.Endpoint.url <> "/images/avatar.png"
-  end
+  # def default_url(version, scope) do
+  #   "/images/avatars/default_#{version}.png"
+  # end
 
   # Specify custom headers for s3 objects
   # Available options are [:cache_control, :content_disposition,

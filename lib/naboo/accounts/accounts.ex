@@ -1,9 +1,12 @@
 defmodule Naboo.Accounts do
 
+  import Ecto.Changeset
   alias Naboo.Accounts.Queries.{UserByEmail, UserByUuid}
   alias Naboo.Accounts.User
-  alias Naboo.Repo
   alias Naboo.App
+#  alias Naboo.AssetStore
+  alias Naboo.Avatar
+  alias Naboo.Repo
 
   # ################################################################################
   # Commands
@@ -22,9 +25,48 @@ defmodule Naboo.Accounts do
   end
 
   def update_user(%User{} = user, attrs \\ %{}) do
-    user
-    |> User.update_changeset(attrs)
-    |> Repo.update()
+    changeset = User.update_changeset(user, attrs)
+    if changeset.valid? do
+      case store_avatar(changeset, user, attrs) do
+        {:ok, changeset} ->
+          Repo.update(changeset)
+        {:error, message} ->
+          changeset
+          |> add_error(:image, message, [])
+          |> apply_action(:update)
+      end
+    else
+      changeset
+      |> apply_action(:update)
+    end
+  end
+
+#  defp store_avatar(changeset, user, %{"avatar" => image_base64} = attrs \\ %{}) do
+#    user = %{id: user.uuid}
+#    case AssetStore.upload_image(image_base64) do
+#      {:ok, url} ->
+#        changeset = Ecto.Changeset.put_change(changeset, :avatar_url, url)
+#        {:ok, changeset}
+#      _ ->
+#        {:error, "error storing picture"}
+#    end
+#  end
+
+  defp store_avatar(changeset, user, %{"avatar" => upload} = attrs \\ %{}) do
+    user = %{uuid: user.uuid}
+    %Plug.Upload{content_type: content_type, filename: filename, path: path} = upload
+    case Avatar.store({%Plug.Upload{filename: filename, path: path}, user}) do
+      {:ok, stored_filename} ->
+        url = NabooWeb.Endpoint.url <> Avatar.url({"stored_filename", user}, :thumb)
+        changeset = Ecto.Changeset.put_change(changeset, :avatar_url, url)
+        {:ok, changeset}
+      _ ->
+        {:error, "error storing picture"}
+    end
+  end
+
+  defp store_avatar(changeset, user, _) do
+    {:ok, changeset}
   end
 
   def update_password(%User{} = user, %{password: password} = attrs \\ %{}) do

@@ -13,6 +13,7 @@ defmodule Naboo.Accounts.User do
   schema "users" do
     field :account_type, :string
     field :active, :boolean, default: false
+    field :avatar_url, :string
     field :email, :string, unique: true
     field :email_verified, :boolean, default: false
     field :full_name, :string
@@ -20,18 +21,17 @@ defmodule Naboo.Accounts.User do
     field :password, :string, virtual: true
     field :password_hash, :string
     field :phone1, :string
-    field :picture, :string
 
     timestamps()
   end
 
   def start_registration_changeset(%__MODULE__{} = user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:account_type, :email, :full_name, :password, :picture, :nickname, :phone1])
+    |> cast(attrs, [:account_type, :email, :full_name, :password, :avatar_url, :nickname, :phone1])
     |> validate_required([:account_type, :email, :password])
     |> validate_email()
     |> validate_password()
-    |> validate_picture()
+    |> validate_avatar_url()
     |> put_pass_hash()
   end
 
@@ -41,8 +41,8 @@ defmodule Naboo.Accounts.User do
 
   def update_changeset(%__MODULE__{} = user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:full_name, :picture, :nickname, :phone1])
-    |> validate_picture()
+    |> cast(attrs, [:full_name, :avatar_url, :nickname, :phone1])
+    |> validate_avatar_url()
   end
 
   def password_update_changeset(%__MODULE__{} = user, attrs \\ %{}) do
@@ -133,13 +133,18 @@ defmodule Naboo.Accounts.User do
     end
   end
 
-  defp validate_picture(changeset) do
-    picture_change = get_change(changeset, :picture)
-    if (picture_change != nil) do
-      case URI.parse(picture_change) do
-        %URI{scheme: nil} -> add_error(changeset, :picture, "must have scheme")
-        %URI{host: nil} -> add_error(changeset, :picture, "must have host")
-        %URI{path: nil} -> add_error(changeset, :picture, "must have path")
+  defp validate_avatar_url(changeset) do
+    avatar_url_change = get_change(changeset, :avatar_url)
+    if (avatar_url_change != nil) do
+      uri = URI.parse(avatar_url_change)
+      IO.inspect(uri)
+
+      case URI.parse(avatar_url_change) do
+        %URI{scheme: "data", path: nil} -> add_error(changeset, :avatar_url, "no image data")
+        %URI{scheme: "data", path: _} -> changeset
+        %URI{scheme: nil} -> add_error(changeset, :avatar_url, "must have scheme")
+        %URI{host: nil} -> add_error(changeset, :avatar_url, "must have host")
+        %URI{path: nil} -> add_error(changeset, :avatar_url, "must have path")
         uri -> changeset
       end
     else

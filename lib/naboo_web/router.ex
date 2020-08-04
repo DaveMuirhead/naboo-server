@@ -57,6 +57,8 @@ defmodule NabooWeb.Router do
     post   "/users/:uuid/email-changes",    EmailController, :start_email_change
     patch  "/users/:uuid/email-changes",    EmailController, :complete_email_change
 
+    post   "/users/:uuid/avatar",           UserController, :avatar
+
   end
 
   # Enables LiveDashboard only for development

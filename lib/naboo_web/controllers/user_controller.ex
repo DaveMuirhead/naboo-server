@@ -3,7 +3,6 @@ defmodule NabooWeb.UserController do
 
   alias Naboo.Accounts
   alias Naboo.Accounts.User
-  alias NabooWeb.Avatar
   alias NabooWeb.Mailer
   alias NabooWeb.Token
   alias NabooWeb.Router.Helpers, as: Routes

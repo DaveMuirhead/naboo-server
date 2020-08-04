@@ -45,7 +45,14 @@ defmodule NabooWeb.Endpoint do
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 
-  plug CORSPlug, origin: ["http://localhost:3000", "http://10.0.0.217:3000", "http://dave.brsg.io:3000"], expose: [ "Set-Cookie"]
+  plug Plug.Static,
+    at: "/uploads",
+    from: "uploads",
+    gzip: false
+
+  plug CORSPlug,
+     origin: ["http://localhost:3000", "http://10.0.0.217:3000", "http://dave.brsg.io:3000"],
+     expose: [ "Set-Cookie"]
 
   plug Plug.MethodOverride
   plug Plug.Head

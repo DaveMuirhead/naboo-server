@@ -9,13 +9,13 @@ defmodule Naboo.Repo.Migrations.CreateUsers do
 
       add :account_type, :string
       add :active, :boolean
+      add :avatar_url, :string
       add :email, :string, null: false
       add :email_verified, :boolean
       add :full_name, :string
       add :nickname, :string
       add :password_hash, :string
       add :phone1, :string
-      add :picture, :string
 
       timestamps()
     end

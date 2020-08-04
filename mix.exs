@@ -37,14 +37,14 @@ defmodule Naboo.MixProject do
   defp deps do
     [
       # Phoenix core
-      {:phoenix, "~> 1.4.17"},
-      {:phoenix_pubsub, "~> 1.1"},
+      {:phoenix, "~> 1.5.0"},
+      {:phoenix_pubsub, "~> 2.0"},
+      {:plug_cowboy, "~> 2.1"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.1"},
-      {:plug_cowboy, "~> 2.0"},
 
       # Monitoring
       {:phoenix_live_dashboard, "~> 0.2.0"},
@@ -52,7 +52,6 @@ defmodule Naboo.MixProject do
       {:telemetry_poller, "~> 0.4"},
 
       # Security
-#      {:bcrypt_elixir, "~> 1.0"}, #remove
       {:comeonin, "~> 5.0"},
       {:argon2_elixir, "~> 2.0"},
       {:guardian, "~> 2.0"},
@@ -64,6 +63,9 @@ defmodule Naboo.MixProject do
 
       # File Upload
       {:arc, "~> 0.11.0"},
+#      {:ex_aws, "~> 2.1"},
+#      {:ex_aws_s3, "~> 2.0"},
+#      {:hackney, "~> 1.16"},
 
       # Utilities
       {:elixir_uuid, "~> 1.2"},
