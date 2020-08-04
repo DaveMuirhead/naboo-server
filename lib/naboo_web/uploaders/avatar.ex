@@ -34,6 +34,7 @@ defmodule Naboo.Avatar do
 
   # Override the storage directory:
   def storage_dir(version, {file, scope}) do
+    #TODO: make the upload directory configurable by environment
     "uploads/avatars/#{scope.uuid}"
   end
 
