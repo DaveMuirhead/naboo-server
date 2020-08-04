@@ -4,7 +4,6 @@ defmodule Naboo.Accounts do
   alias Naboo.Accounts.Queries.{UserByEmail, UserByUuid}
   alias Naboo.Accounts.User
   alias Naboo.App
-#  alias Naboo.AssetStore
   alias Naboo.Avatar
   alias Naboo.Repo
 
@@ -40,17 +39,6 @@ defmodule Naboo.Accounts do
       |> apply_action(:update)
     end
   end
-
-#  defp store_avatar(changeset, user, %{"avatar" => image_base64} = attrs \\ %{}) do
-#    user = %{id: user.uuid}
-#    case AssetStore.upload_image(image_base64) do
-#      {:ok, url} ->
-#        changeset = Ecto.Changeset.put_change(changeset, :avatar_url, url)
-#        {:ok, changeset}
-#      _ ->
-#        {:error, "error storing picture"}
-#    end
-#  end
 
   defp store_avatar(changeset, user, %{"avatar" => upload} = attrs \\ %{}) do
     user = %{uuid: user.uuid}
