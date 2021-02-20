@@ -2,6 +2,8 @@
 
 The Naboo Server project houses a Phoenix-based REST API that serves a NuxtJS/VueJS-based front-end ([naboo-pwa](https://github.com/DaveMuirhead/naboo-pwa)).
 
+This project is no longer active and was used as a means to out various approaches with Elixir / Phoenix / NuxtJS.
+
 ## Stack
 
 <img src="https://phoenixframework.org/images/phoenix-78c0fd3233522383ea9093ef877c8851.png?vsn=d" />
