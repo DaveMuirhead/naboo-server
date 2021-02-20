@@ -6,7 +6,13 @@ This project is no longer active and was used as a means to try out various appr
 
 ## Stack
 
-<img src="https://phoenixframework.org/images/phoenix-78c0fd3233522383ea9093ef877c8851.png?vsn=d" />
+Elixir
+
+<img src="https://elixir-lang.org/images/logo/logo.png" height="60" />
+
+Phoenix Framework
+
+<img src="https://hexdocs.pm/phoenix/assets/logo.png" height="60" />
 
 with:
 * [Ueberauth](https://github.com/ueberauth/ueberauth) + [Guardian](https://github.com/ueberauth/guardian) for auth
